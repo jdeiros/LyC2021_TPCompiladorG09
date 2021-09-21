@@ -1,0 +1,41 @@
+*/ZONA DE DECLARACION DE VARIABLES/*
+DECVAR
+ A,B,C,D,E 			:	INT
+ G,F 				:	STRING
+ W			        :	FLOAT
+ C 				    :	INT
+ENDDEC
+
+A := 5
+B := 10
+C := 15
+W := 1.40
+
+FOR A := B+C TO D NEXT A
+
+ECUMAX ( A + B ; [ A , 4 , B ] ) 
+
+ECUMIN ( C - D ; [ C , 7 , D ] ) 
+
+WHILE(E > B && E==C)
+{
+    E:= E * 1
+}
+
+IF(A == 4)
+THEN
+{
+ 	D:=5
+}
+ELSE
+{
+	D:=4
+}
+
+
+G:= "HOLA"
+F:="HOLA TODO BIEN"
+
+DISPLAY "Mostrar por pantalla"
+GET F
+DISPLAY A
