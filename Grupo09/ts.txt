@@ -13,8 +13,14 @@ _1p40                            |CTE_FLOAT      |1.40                          
 _4                               |CTE_INT        |4                               |0         |
 _7                               |CTE_INT        |7                               |0         |
 _1                               |CTE_INT        |1                               |0         |
+_8                               |CTE_INT        |8                               |0         |
 G                                |ID             |                                |0         |
-_HOLA                            |CTE_STRING     |"HOLA"                          |6         |
+_9                               |CTE_INT        |9                               |0         |
+_3                               |CTE_INT        |3                               |0         |
 F                                |ID             |                                |0         |
+_IF_anidado                      |CTE_STRING     |"IF anidado"                    |12        |
+_condicion_compuesta             |CTE_STRING     |"condicion compuesta"           |21        |
+_IF_exterior                     |CTE_STRING     |"IF exterior"                   |13        |
+_HOLA                            |CTE_STRING     |"HOLA"                          |6         |
 _HOLA_TODO_BIEN                  |CTE_STRING     |"HOLA TODO BIEN"                |16        |
 _Mostrar_por_pantalla            |CTE_STRING     |"Mostrar por pantalla"          |22        |

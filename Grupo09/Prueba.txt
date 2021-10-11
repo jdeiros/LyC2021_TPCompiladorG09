@@ -21,6 +21,14 @@ IF(A == 4)
 THEN
 {
  	D:=5
+	IF(B > 8 || G == 9)
+	THEN
+	{
+		D:=3
+		F:="IF anidado"
+		DISPLAY "condicion compuesta"
+	}
+	G:="IF exterior"
 }
 ELSE
 {
