@@ -33,6 +33,7 @@ THEN
 ELSE
 {
 	D:=4
+	DISPLAY "regla de IF con ELSE"
 }
 
 
