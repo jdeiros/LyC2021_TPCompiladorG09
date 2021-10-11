@@ -41,8 +41,8 @@
 %token ECUMAX
 %token GET
 %token DISPLAY
-%token DECVAR
-%token ENDDEC
+%token DIM
+%token AS
 
 %token INT
 %token FLOAT
@@ -54,7 +54,7 @@
 %token OP_MUL
 %token OP_ASIG
 %token OP_IGUAL
-%token OP_DOSP
+
 %token CAR_COMA
 %token CAR_PYC
 %token CAR_PA
@@ -85,29 +85,27 @@ programa: {printf("INICIO PROGRAMA\n");}
 	sentencias {printf("FIN SENTENCIAS\n"); mostrarTablaSimbolos();}
 
 declaracion_var: 
-	DECVAR {printf("DECVAR\n");} 
-	lista_de_declaracion_de_tipos 
-	ENDDEC {printf("ENDDEC\n");}
+	DIM {printf("DIM ");} 
+	CMP_MENOR {printf(" < ");}
+	lista_declaracion_var
+	CMP_MAYOR {printf(" > ");}
+	AS {printf("AS\n");}
+	CMP_MENOR {printf(" < ");}
+	lista_declaracion_tipos 
+	CMP_MAYOR {printf(" > ");}
 
-lista_de_declaracion_de_tipos:
-	lista_de_declaracion_de_tipos linea_declaracion
+lista_declaracion_var:
+	lista_declaracion_var CAR_COMA ID {printf(" id ");} |
+	ID {printf(" id1 ");}
 
-lista_de_declaracion_de_tipos: 
-	linea_declaracion
-
-linea_declaracion: 
-	lista OP_DOSP {printf("OPERADOR : \n");} declaracion_tipo
-
-lista:
-	lista CAR_COMA {printf(", \n");} ID {printf("ID \n");}
-
-lista:
-	ID {printf("ID \n");}
+lista_declaracion_tipos:
+	lista_declaracion_tipos CAR_COMA declaracion_tipo |
+	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT); printf("INT \n");}|
-	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("FLOAT \n");}|
-	STRING 		{actualizarTipoDato(T_STRING); printf("STRING \n");}
+	INT 		{actualizarTipoDato(T_INT); printf("ingeger ");}|
+	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("real ");}|
+	STRING 		{actualizarTipoDato(T_STRING); printf("STRING ");}
 
 sentencias:
 	sentencias operacion {printf("FIN OPERACION \n");}

@@ -1,10 +1,5 @@
 */ZONA DE DECLARACION DE VARIABLES/*
-DECVAR
- A,B,C,D,E 			:	INT
- G,F 				:	STRING
- W			        :	FLOAT
- C 				    :	INT
-ENDDEC
+DIM <A,B,C,D,E> AS <integer, real, string, integer, real>
 
 A := 5
 B := 10

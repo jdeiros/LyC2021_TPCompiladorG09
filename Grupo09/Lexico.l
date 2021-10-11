@@ -37,16 +37,16 @@ endif|ENDIF				{ return ENDIF; }
 while|WHILE				{ return WHILE; }
 get|GET 				{ return GET; }
 display|DISPLAY 		{ return DISPLAY; }
-decvar|DECVAR 			{ return DECVAR; }
-enddec|ENDDEC 			{ return ENDDEC; }
+dim|DIM 				{ return DIM; }
+as|AS 					{ return AS; }
 for|FOR 				{ return FOR; }
 next|NEXT				{ return NEXT; }
 to|TO					{ return TO; }
 ecumax|ECUMAX 			{ return ECUMAX; }
 ecumin|ECUMIN			{ return ECUMIN; }
 
-int|INT					{ return INT; }
-float|FLOAT				{ return FLOAT; }
+integer|INTEGER			{ return INT; }
+real|REAL				{ return FLOAT; }
 string|STRING			{ return STRING; }
 
 "+"						{ return OP_SUM; }
@@ -55,7 +55,7 @@ string|STRING			{ return STRING; }
 "*"						{ return OP_MUL; }
 ":="					{ return OP_ASIG; }
 "="						{ return OP_IGUAL; }
-":"						{ return OP_DOSP; }
+
 ","						{ return CAR_COMA; }
 ";"						{ return CAR_PYC; }
 "("						{ return CAR_PA; }
