@@ -42,8 +42,8 @@ as|AS 					{ return AS; }
 for|FOR 				{ return FOR; }
 next|NEXT				{ return NEXT; }
 to|TO					{ return TO; }
-ecumax|ECUMAX 			{ return ECUMAX; }
-ecumin|ECUMIN			{ return ECUMIN; }
+equmax|EQUMAX 			{ return EQUMAX; }
+equmin|EQUMIN			{ return EQUMIN; }
 
 integer|INTEGER			{ return INT; }
 real|REAL				{ return FLOAT; }

@@ -37,8 +37,8 @@
 %token FOR
 %token NEXT
 %token TO
-%token ECUMIN
-%token ECUMAX
+%token EQUMIN
+%token EQUMAX
 %token GET
 %token DISPLAY
 %token DIM
@@ -103,7 +103,7 @@ lista_declaracion_tipos:
 	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT); printf("ingeger ");}|
+	INT 		{actualizarTipoDato(T_INT); printf("integer ");}|
 	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("real ");}|
 	STRING 		{actualizarTipoDato(T_STRING); printf("STRING ");}
 
@@ -117,8 +117,8 @@ operacion:
 	operacion_if 		{printf("IF \n");}|
 	iteracion_while  	{printf("WHILE \n");}|
 	iteracion_for		{printf("FOR \n");}|
-	operacion_ecumax	{printf("ECUMAX \n");}|
-	operacion_ecumin	{printf("ECUMIN \n");}|
+	operacion_equmax	{printf("EQUMAX \n");}|
+	operacion_equmin	{printf("EQUMIN \n");}|
 	asignacion			{printf("ASIGNACION \n");}|
 	entrada_salida		{printf("IN / OUT \n");}
 
@@ -141,21 +141,21 @@ iteracion_for:
 	FOR ID OP_ASIG expresion TO expresion NEXT ID |
 	FOR ID OP_ASIG expresion TO expresion CAR_CA constante CAR_CC NEXT ID
 	
-operacion_ecumax:
-	ECUMAX CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
+operacion_equmax:
+	EQUMAX CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
 	
-operacion_ecumin:
-	ECUMIN CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
+operacion_equmin:
+	EQUMIN CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
 
 lista_variables:
 	factor CAR_COMA lista_variables |
 	factor
 	
 condiciones:
-	condicion 						|
-	NOT condicion 					|
-	condicion	AND  condicion 		|
-	condicion OR condicion  
+	condicion 				{printf("condicion \n");}		|
+	NOT condicion 			{printf("condicion not \n");}		|
+	condicion	AND  condicion 	{printf("condicion and \n");}	|
+	condicion OR condicion  {printf("condicion or \n");} 
 
 condicion:
 	expresion operador expresion 
