@@ -21,6 +21,7 @@ F                                |ID             |                              
 _IF_anidado                      |CTE_STRING     |"IF anidado"                    |12        |
 _condicion_compuesta             |CTE_STRING     |"condicion compuesta"           |21        |
 _IF_exterior                     |CTE_STRING     |"IF exterior"                   |13        |
+_regla_de_IF_con_ELSE            |CTE_STRING     |"regla de IF con ELSE"          |22        |
 _HOLA                            |CTE_STRING     |"HOLA"                          |6         |
 _HOLA_TODO_BIEN                  |CTE_STRING     |"HOLA TODO BIEN"                |16        |
 _Mostrar_por_pantalla            |CTE_STRING     |"Mostrar por pantalla"          |22        |
