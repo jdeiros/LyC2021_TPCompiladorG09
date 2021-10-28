@@ -6,7 +6,6 @@
 	#include <math.h>
 	#include "y.tab.h"
 	#include "funciones.h"
-	
 
 	extern int yylineno;
 	FILE *yyin;
@@ -17,8 +16,6 @@
 	int yylex();
 	int yyerror();
 	
-	
-
 %}
 
 %union{
@@ -40,8 +37,8 @@
 %token FOR
 %token NEXT
 %token TO
-%token EQUMIN
-%token EQUMAX
+%token ECUMIN
+%token ECUMAX
 %token GET
 %token DISPLAY
 %token DIM
@@ -106,7 +103,7 @@ lista_declaracion_tipos:
 	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT); printf("integer ");}|
+	INT 		{actualizarTipoDato(T_INT); printf("ingeger ");}|
 	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("real ");}|
 	STRING 		{actualizarTipoDato(T_STRING); printf("STRING ");}
 
@@ -120,19 +117,9 @@ operacion:
 	operacion_if 		{printf("IF \n");}|
 	iteracion_while  	{printf("WHILE \n");}|
 	iteracion_for		{printf("FOR \n");}|
-	operacion_equmax	{printf("EQUMAX \n");}|
-	operacion_equmin	{printf("EQUMIN \n");}|
-	asignacion			{
-		
-							printf("ASIGNACION \n");
-							//probando tercetos
-							crear_terceto("=", "a", "b");
-							crear_terceto("-", "c", NULL);
-							crear_terceto("+", "a", NULL);
-							crear_terceto("/", "b", "d");
-							escribir_tercetos(intermedia);
-							//probando tercetos	
-						} |
+	operacion_ecumax	{printf("ECUMAX \n");}|
+	operacion_ecumin	{printf("ECUMIN \n");}|
+	asignacion			{printf("ASIGNACION \n");}|
 	entrada_salida		{printf("IN / OUT \n");}
 
 operacion_if:
@@ -154,21 +141,21 @@ iteracion_for:
 	FOR ID OP_ASIG expresion TO expresion NEXT ID |
 	FOR ID OP_ASIG expresion TO expresion CAR_CA constante CAR_CC NEXT ID
 	
-operacion_equmax:
-	EQUMAX CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
+operacion_ecumax:
+	ECUMAX CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
 	
-operacion_equmin:
-	EQUMIN CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
+operacion_ecumin:
+	ECUMIN CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
 
 lista_variables:
 	factor CAR_COMA lista_variables |
 	factor
 	
 condiciones:
-	condicion 				{printf("condicion \n");}		|
-	NOT condicion 			{printf("condicion not \n");}		|
-	condicion	AND  condicion 	{printf("condicion and \n");}	|
-	condicion OR condicion  {printf("condicion or \n");} 
+	condicion 						|
+	NOT condicion 					|
+	condicion	AND  condicion 		|
+	condicion OR condicion  
 
 condicion:
 	expresion operador expresion 
@@ -213,8 +200,6 @@ entrada_salida:
 
 int main(int argc,char *argv[])
 {
-	init();
-
 	if ((yyin = fopen(argv[1], "rt")) == NULL) {
         printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
     }
@@ -232,3 +217,4 @@ int yyerror() {
 	system("Pause");
 	exit(1);
 }
+

@@ -1,0 +1,45 @@
+*/ZONA DE DECLARACION DE VARIABLES/*
+DIM <A,B,C,D,E> AS <integer, real, string, integer, real>
+
+A := 5
+B := 10
+C := 15
+W := 1.40
+
+FOR A := B+C TO D NEXT A
+
+ECUMAX ( A + B ; [ A , 4 , B ] ) 
+
+ECUMIN ( C - D ; [ C , 7 , D ] ) 
+
+WHILE(E > B && E==C)
+{
+    E:= E * 1
+}
+
+IF(A == 4)
+THEN
+{
+ 	D:=5
+	IF(B > 8 || G == 9)
+	THEN
+	{
+		D:=3
+		F:="IF anidado"
+		DISPLAY "condicion compuesta"
+	}
+	G:="IF exterior"
+}
+ELSE
+{
+	D:=4
+	DISPLAY "regla de IF con ELSE"
+}
+
+
+G:= "HOLA"
+F:="HOLA TODO BIEN"
+
+DISPLAY "Mostrar por pantalla"
+GET F
+DISPLAY A

@@ -1,0 +1,18 @@
+DIM <a, b, c> AS <integer, integer, integer>
+
+if (a < b) then {
+    if (a <= c) then {
+        while (a == b) {
+            while (a > c) {
+                a := a + 1
+                if (a > b) then {
+                    a := 0
+                    DISPLAY "hola mundo anidado"
+                }
+            }
+        }
+    }
+} else {
+    DISPLAY "chau mundo"
+}
+
