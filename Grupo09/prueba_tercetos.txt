@@ -1,0 +1,3 @@
+DIM <a> AS <integer>
+
+a := 1

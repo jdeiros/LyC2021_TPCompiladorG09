@@ -6,6 +6,7 @@
 	#include <math.h>
 	#include "y.tab.h"
 	#include "funciones.h"
+	
 
 	extern int yylineno;
 	FILE *yyin;
@@ -16,6 +17,8 @@
 	int yylex();
 	int yyerror();
 	
+	
+
 %}
 
 %union{
@@ -119,7 +122,17 @@ operacion:
 	iteracion_for		{printf("FOR \n");}|
 	operacion_equmax	{printf("EQUMAX \n");}|
 	operacion_equmin	{printf("EQUMIN \n");}|
-	asignacion			{printf("ASIGNACION \n");}|
+	asignacion			{
+		
+							printf("ASIGNACION \n");
+							//probando tercetos
+							crear_terceto("=", "a", "b");
+							crear_terceto("-", "c", NULL);
+							crear_terceto("+", "a", NULL);
+							crear_terceto("/", "b", "d");
+							escribir_tercetos(intermedia);
+							//probando tercetos	
+						} |
 	entrada_salida		{printf("IN / OUT \n");}
 
 operacion_if:
@@ -200,6 +213,8 @@ entrada_salida:
 
 int main(int argc,char *argv[])
 {
+	init();
+
 	if ((yyin = fopen(argv[1], "rt")) == NULL) {
         printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
     }
@@ -217,4 +232,3 @@ int yyerror() {
 	system("Pause");
 	exit(1);
 }
-
