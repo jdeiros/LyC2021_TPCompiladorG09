@@ -23,6 +23,7 @@ typedef struct
 	int longitud;
 } t_simbolo;
 
+
 /*** SECCION FUNCIONES TABLA DE SIMBOLOS ***/
 int tsCrearArchivo();
 void insertarTablaSimbolos(char *, int, char *, int);
@@ -61,9 +62,39 @@ int cant_tercetos;
 t_terceto *_crear_terceto(const char *, const char *, const char *);
 /* crea un terceto y lo agrega a la coleccion */
 int crear_terceto(const char *, const char *, const char *);
+/* crea un terceto y lo agrega a la coleccion y devuelve string con formato [n]*/
+char * str_terceto_number(int);
 /* escribe los tercetos en un archivo */
 void escribir_tercetos(FILE *);
 /* libera memoria pedida para tercetos */
 void limpiar_tercetos();
 
+int terceto_number(char *);
+
 FILE *intermedia;
+/* flag error de sintaxis */
+int sintaxis_error;
+char * get_from_TS();
+
+/* Pila para manejo de tercetos */ 
+typedef struct s_nodo {
+    int valor;
+    struct s_nodo *sig;
+} t_nodo;
+typedef t_nodo* t_pila;
+/* apunta al ultimo elemento ingresado */
+t_pila pila;
+/* Indica que operador de comparacion se uso */
+t_pila comparacion;
+/* Apila los tipos de condicion (and, or, not) cuando hay anidamiento */
+t_pila pila_condicion;
+/** inserta un entero en la pila */
+void insertar_pila (t_pila*, int);
+/** obtiene un entero de la pila */
+int sacar_pila(t_pila*);
+/** crea una estructura de pila */
+void crear_pila(t_pila*);
+/** destruye pila */
+void destruir_pila(t_pila*);
+
+char * string_from_cte(int cte);

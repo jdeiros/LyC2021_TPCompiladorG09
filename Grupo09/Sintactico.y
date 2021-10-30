@@ -7,6 +7,23 @@
 	#include "y.tab.h"
 	#include "funciones.h"
 	
+	const char salto[6][4] = {
+		{"BGE"}, // menor
+		{"BGT"}, // menor igual
+		{"BLE"}, //mayor
+		{"BLT"}, //mayor igual
+		{"BEQ"}, // distinto
+		{"BNE"}, //igual
+	};
+
+	const char salto_contrario[6][4] = {
+		{"BLT"}, // menor
+		{"BLE"}, // menor igual
+		{"BGT"}, //mayor
+		{"BGE"}, //mayor igual
+		{"BEQ"}, // distinto
+		{"BNE"}, //igual
+	};
 
 	extern int yylineno;
 	FILE *yyin;
@@ -15,14 +32,11 @@
 	int yyparse();
 	
 	int yylex();
-	int yyerror();
-	
-	
+	int yyerror();	
 
 %}
 
 %union{
-
     char *intValue;
     char *floatValue;
     char *stringValue;
@@ -34,7 +48,7 @@
 //Tokens
 %token IF
 %token THEN
-%token ELSE
+%token ELSE	
 %token ENDIF
 %token WHILE
 %token FOR
@@ -66,15 +80,15 @@
 %token CAR_CC
 %token CAR_LA
 %token CAR_LC
-%token CMP_MAYOR
-%token CMP_MENOR
-%token CMP_MAYORIGUAL
-%token CMP_MENORIGUAL
-%token CMP_DISTINTO
-%token CMP_IGUAL
-%token AND
-%token OR
-%token NOT
+%token <intValue>CMP_MAYOR
+%token <intValue>CMP_MENOR
+%token <intValue>CMP_MAYORIGUAL
+%token <intValue>CMP_MENORIGUAL
+%token <intValue>CMP_DISTINTO
+%token <intValue>CMP_IGUAL
+%token <intValue>AND
+%token <intValue>OR
+%token <intValue>NOT
 
 %token <stringValue>ID
 %token <stringValue>CONST_INT
@@ -85,7 +99,7 @@
 %%
 programa: {printf("INICIO PROGRAMA\n");}
 	declaracion_var {printf("INICIO SENTENCIAS\n");} 
-	sentencias {printf("FIN SENTENCIAS\n"); mostrarTablaSimbolos();}
+	sentencias {printf("FIN SENTENCIAS\n"); }
 
 declaracion_var: 
 	DIM {printf("DIM ");} 
@@ -122,24 +136,94 @@ operacion:
 	iteracion_for		{printf("FOR \n");}|
 	operacion_equmax	{printf("EQUMAX \n");}|
 	operacion_equmin	{printf("EQUMIN \n");}|
-	asignacion			{
-		
-							printf("ASIGNACION \n");
-							//probando tercetos
-							crear_terceto("=", "a", "b");
-							crear_terceto("-", "c", NULL);
-							crear_terceto("+", "a", NULL);
-							crear_terceto("/", "b", "d");
-							escribir_tercetos(intermedia);
-							//probando tercetos	
-						} |
+	asignacion			{printf("ASIGNACION \n");} |
 	entrada_salida		{printf("IN / OUT \n");}
 
 operacion_if:
-	IF CAR_PA condiciones CAR_PC then_ CAR_LA sentencias CAR_LC
+	IF CAR_PA condiciones CAR_PC then_ CAR_LA sentencias CAR_LC {
+               int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1;
+			   char condicion[7], destino[7];
+			   int tipo_condicion = sacar_pila (&pila_condicion);
+			   if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
+				   cant_condiciones = 2;
+			   } 
+			   /* Modifico los tercetos temporales de las condiciones */
+			   for (i=0; i<cant_condiciones; i++){
+				   iCmp = sacar_pila (&comparacion);
+				   terceto_condicion = sacar_pila (&pila);
+				   
+				   sprintf(condicion, "[%d]", terceto_condicion-1);
+				   printf("condicion: %s\n",condicion);
+				   
+				   sprintf(destino, "[%d]", atoi($<stringValue>7)+1);
+				   printf("destino: %s\n", destino);
+				   
+				   /* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
+				   if (tipo_condicion==COND_OR && i==1){
+					   sprintf(destino, "[%d]", segunda_condicion+1);
+					   printf("destino segunda condicion: %s\n", destino);
+
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+				   } else if (tipo_condicion==COND_NOT){
+					   /* Si es NOT, produce el salto cuando se cumple la condicion */
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+				   } else {
+					   segunda_condicion = terceto_condicion;
+					   tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], condicion, destino);
+				   }
+			   }
+               $<stringValue>$ =string_from_cte(atoi( $<stringValue>7)+1);
+           }
 
 operacion_if:
-	IF CAR_PA condiciones CAR_PC then_ CAR_LA sentencias CAR_LC else_ CAR_LA sentencias CAR_LC
+	IF CAR_PA condiciones CAR_PC then_ CAR_LA sentencias CAR_LC {
+               int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1;
+			   char condicion[7], destino[7];
+			   int tipo_condicion = sacar_pila (&pila_condicion);
+			   if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
+				   cant_condiciones = 2;
+			   } 
+			   /* Modifico los tercetos temporales de las condiciones */
+			   for (i=0; i<cant_condiciones; i++){
+				   iCmp = sacar_pila (&comparacion);
+				   terceto_condicion = sacar_pila (&pila);
+				   
+				   sprintf(condicion, "[%d]", terceto_condicion-1);
+				   printf("condicion: %s\n",condicion);
+				   
+				   sprintf(destino, "[%d]", atoi($<stringValue>7)+2);
+				   printf("destino: %s\n", destino);
+				   
+				   /* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
+				   if (tipo_condicion==COND_OR && i==1){
+					   sprintf(destino, "[%d]", segunda_condicion+1);
+					   printf("destino segunda condicion: %s\n", destino);
+
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+				   } else if (tipo_condicion==COND_NOT){
+					   /* Si es NOT, produce el salto cuando se cumple la condicion */
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+				   } else {
+					   segunda_condicion = terceto_condicion;
+					   tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], condicion, destino);
+				   }
+			   }
+			   insertar_pila(&pila, crear_terceto("###", NULL, NULL)); /* guardo fin_then para el else */
+               $<stringValue>$ =string_from_cte(atoi( $<stringValue>7));
+           }
+		   else_ {
+               // creo un terceto temporal donde colocare el salto del then
+               //int fin_then = crear_terceto("Temporal", NULL, NULL);
+               //insertar_pila (&pila, fin_then);
+           }
+		   CAR_LA sentencias CAR_LC {
+				// creo el salto al ultimo terceto del else
+				int fin_then = sacar_pila (&pila);
+				char destino[7];
+				sprintf(destino, "[%d]", string_from_cte(atoi($<stringValue>13)+1));
+				tercetos[fin_then] = _crear_terceto("BI", destino, NULL);
+				$<stringValue>$ = string_from_cte(atoi($<stringValue>13)+1);
+           }
 
 then_:
 	THEN
@@ -165,38 +249,58 @@ lista_variables:
 	factor
 	
 condiciones:
-	condicion 				{printf("condicion \n");}		|
-	NOT condicion 			{printf("condicion not \n");}		|
-	condicion	AND  condicion 	{printf("condicion and \n");}	|
-	condicion OR condicion  {printf("condicion or \n");} 
+	condicion {
+				insertar_pila (&pila, crear_terceto("###",NULL,NULL));
+				insertar_pila (&pila_condicion, COND_SIMPLE);
+			  } |
+	NOT condicion {
+					insertar_pila (&pila, crear_terceto("###",NULL,NULL));
+					insertar_pila (&pila_condicion, COND_NOT);
+				  } |
+	condicion {
+				insertar_pila (&pila, crear_terceto("###",NULL,NULL)); 
+			  } AND  condicion {
+				insertar_pila (&pila, crear_terceto("###",NULL,NULL)); 
+				insertar_pila (&pila_condicion, COND_AND);
+			  }	|
+	condicion  {
+				insertar_pila (&pila, crear_terceto("###",NULL,NULL)); 
+			  } OR condicion  {
+				insertar_pila (&pila, crear_terceto("###",NULL,NULL)); 
+				insertar_pila (&pila_condicion, COND_OR);
+			  }
 
 condicion:
-	expresion operador expresion 
-
+	expresion operador expresion {
+		/* aviso que operacion hay que hacer */
+        insertar_pila(&comparacion, atoi($<intValue>2));
+        $<stringValue>$ = str_terceto_number(crear_terceto("CMP", $<stringValue>1, $<stringValue>3)); 
+	}
 
 operador:
-	CMP_IGUAL 		|
-	CMP_DISTINTO 	| 
-	CMP_MENOR 		|
-	CMP_MAYOR 		| 
-	CMP_MENORIGUAL 
+	CMP_IGUAL 		{$<intValue>$ = string_from_cte(CTE_CMP_IGUAL);}|
+	CMP_DISTINTO 	{$<intValue>$ = string_from_cte(CTE_CMP_DISTINTO);}|
+	CMP_MENOR 		{$<intValue>$ = string_from_cte(CTE_CMP_MENOR);}|
+	CMP_MAYOR 		{$<intValue>$ = string_from_cte(CTE_CMP_MAYOR);}|
+	CMP_MENORIGUAL 	{$<intValue>$ = string_from_cte(CTE_CMP_MENOR_IGUAL);}|
+	CMP_MAYORIGUAL 	{$<intValue>$ = string_from_cte(CTE_CMP_MAYOR_IGUAL);}
 
 
 asignacion:	
-	ID OP_ASIG expresion 
+	ID OP_ASIG expresion {$<stringValue>$ = str_terceto_number(crear_terceto(":=", $<stringValue>1, $<stringValue>3)); }
 
 expresion:
-	expresion OP_RES termino 	|
-	expresion OP_SUM termino 	|
+	expresion OP_RES termino 	 {$<stringValue>$ = str_terceto_number(crear_terceto("+", $<stringValue>1, $<stringValue>3)); }|
+	expresion OP_SUM termino 	 {$<stringValue>$ = str_terceto_number(crear_terceto("+", $<stringValue>1, $<stringValue>3)); }|
 	termino
 
 termino:
-	termino OP_MUL factor 	|	
-	termino OP_DIV factor 	|
+	termino OP_MUL factor 	{$<stringValue>$ = str_terceto_number(crear_terceto("*", $<stringValue>1, $<stringValue>3)); }|	
+	termino OP_DIV factor 	{$<stringValue>$ = str_terceto_number(crear_terceto("/", $<stringValue>1, $<stringValue>3)); }|
 	factor
 
 factor:
-	ID 			| 
+	ID 		  		| 
 	constante 
 
 constante:
@@ -222,13 +326,25 @@ int main(int argc,char *argv[])
         yyparse();
     }
     fclose(yyin);
-
+	
+    // libero memoria de tercetos
     printf("\n\n* COMPILACION EXITOSA *\n");
+
+	// guardo coleccion de tercetos en archivo
+    if (!sintaxis_error) {
+        escribir_tercetos(intermedia);
+		printf("Mostrando tercetos guardados: \n");
+        escribir_tercetos(stdout);
+		mostrarTablaSimbolos();
+    }
+	// libero memoria de tercetos
+    limpiar_tercetos();
 	return 0;
 }
 
 int yyerror() {
 	printf("Error sintatico \n");
 	system("Pause");
+	sintaxis_error = 1;
 	exit(1);
 }
