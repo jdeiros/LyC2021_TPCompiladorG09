@@ -50,7 +50,7 @@ void insertarTablaSimbolos(char *nombre, int tipo, char *dato, int longitud)
 void mostrarTablaSimbolos()
 {
 	int i;
-	printf("Cantidad de simbolos en tabla: %d\n", posActualTablaSimbolos);
+	printf("Cantidad de simbolos en Tabla de Simbolos: %d\n", posActualTablaSimbolos);
 	for (i = 0; i < posActualTablaSimbolos; i++)
 	{
 		printf("POS. %d, NOMBRE %s, TIPO %d, DATO %s, LONGITUD %d\n", i, tablaSimbolos[i].nombre, tablaSimbolos[i].tipo, tablaSimbolos[i].dato, tablaSimbolos[i].longitud);
@@ -278,6 +278,18 @@ int crear_terceto(const char *t1, const char *t2, const char *t3)
 	return numero;
 }
 
+char * str_terceto_number(int numero)
+{	
+	// devuelvo numero de terceto en un string con formato [n]
+	char * aux = (char *) malloc(sizeof(numero));
+	char * terceto = (char *) malloc(sizeof('[') + sizeof(numero) + sizeof(']'));
+	itoa(numero,aux,10);	
+	strcpy(terceto,"[");
+	strcat(terceto,aux);
+	strcat(terceto,"]");
+	return terceto;
+}
+
 /** Escribe tercetos en un archivo de texto */
 void escribir_tercetos(FILE *archivo)
 {
@@ -295,15 +307,75 @@ void limpiar_tercetos()
 	for (i = 0; i < cant_tercetos; i++)
 		free(tercetos[i]);
 }
+int terceto_number(char * terceto_number_enclosed)
+{
+	int index=1, position;
+	char str_terceto_number[strlen(terceto_number_enclosed)];
+
+	while (index < strlen(terceto_number_enclosed)-1) {
+      str_terceto_number[index] = terceto_number_enclosed[index];
+	  index++;
+   	}
+	return atoi(str_terceto_number);
+}
+
+/** inserta un entero en la pila */
+void insertar_pila (t_pila *p, int valor) {
+    // creo nodo
+    t_nodo *nodo = (t_nodo*) malloc (sizeof(t_nodo));
+    // asigno valor
+    nodo->valor = valor;
+    // apunto al elemento siguiente
+    nodo->sig = *p;
+    // apunto al tope de la pila
+    *p = nodo;
+}
+
+/** obtiene un entero de la pila */
+int sacar_pila(t_pila *p) {
+    int valor = ERROR;
+    t_nodo *aux;
+    if (*p != NULL) {
+       aux = *p;
+       valor = aux->valor;
+       *p = aux->sig;
+       free(aux);
+    }
+    return valor;
+}
+
+/** crea una estructura de pila */
+void crear_pila(t_pila *p) {
+    *p = NULL;
+}
+
+/** destruye pila */
+void destruir_pila(t_pila *p) {
+    while ( ERROR != sacar_pila(p));
+}
+
 
 /* inicializaciones globales*/
 void init()
 {
-	cant_tercetos = 0;
-
+	sintaxis_error = 0;
 	if ((intermedia = fopen("Intermedia.txt", "w")) == NULL)
 	{
 		printf("No se puede crear el archivo Intermedia.txt\n");
 		exit(ERROR);
 	}
+
+	cant_tercetos = 0;
+	crear_pila(&pila);
+    crear_pila(&comparacion);
+	crear_pila(&pila_condicion);
+}
+
+
+char * string_from_cte(int cte)
+{
+	char * str_cte = (char *) malloc(sizeof(cte));
+	itoa(cte,str_cte,10);	
+	
+	return str_cte;
 }
