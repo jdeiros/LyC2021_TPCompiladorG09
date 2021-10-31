@@ -345,10 +345,20 @@ constante:
 	CONST_STR
 
 entrada_salida:
-	GET ID 			|
-	DISPLAY ID 		|
-	DISPLAY CONST_STR 
-
+	GET ID {
+		verificarExisteId($<stringValue>2);
+		char valor[COTA_STR];
+		obtener_nombre_o_valor($<stringValue>2, valor);
+		$<stringValue>$ = str_terceto_number(crear_terceto ("GET", valor, NULL));
+	} |
+	DISPLAY ID {
+		char valor[COTA_STR];
+		obtener_nombre_o_valor($<stringValue>2, valor);
+		$<stringValue>$ = str_terceto_number(crear_terceto ("DISPLAY", valor, NULL));
+	} |
+	DISPLAY CONST_STR {
+		$<stringValue>$ = str_terceto_number(crear_terceto ("DISPLAY", $<stringValue>2, NULL));
+	}
 %%
 
 int main(int argc,char *argv[])

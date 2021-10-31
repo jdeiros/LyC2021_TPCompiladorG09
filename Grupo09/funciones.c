@@ -379,3 +379,35 @@ char * string_from_cte(int cte)
 	
 	return str_cte;
 }
+
+
+/** Obtiene nombre o valor del elemento en posicion i en la tabla de simbolos */
+void obtener_nombre_o_valor(char* lex, char* destino) {
+    
+	
+
+	int i, auxTipo, flagEncontrado = 0;
+	char *auxNombre;
+
+	for (i = 0; i < posActualTablaSimbolos; i++)
+	{
+		auxNombre = tablaSimbolos[i].nombre;
+		auxTipo = tablaSimbolos[i].tipo;
+
+		if (strcmp(auxNombre, lex) == 0 && auxTipo != T_ID)
+		{
+			flagEncontrado = 1;
+			if (*(tablaSimbolos[i].dato))
+				strcpy(destino, tablaSimbolos[i].dato);
+			else
+				strcpy(destino, tablaSimbolos[i].nombre);
+		}
+	}
+
+	if (flagEncontrado == 0)
+	{
+		printf("Descripcion: el id '%s' no ha sido declarado\n", i);
+		system("Pause");
+		exit(1);
+	}
+}

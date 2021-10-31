@@ -16,3 +16,5 @@ ELSE
 {
 	DISPLAY "no esta en la lista o esta y no es máximo"
 }
+
+GET a

@@ -98,3 +98,6 @@ void crear_pila(t_pila*);
 void destruir_pila(t_pila*);
 
 char * string_from_cte(int cte);
+
+/** Obtiene nombre o valor del elemento en posicion i en la tabla de simbolos */
+void obtener_nombre_o_valor(char* lex, char* destino);
