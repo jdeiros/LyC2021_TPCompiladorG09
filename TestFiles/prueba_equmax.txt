@@ -1,0 +1,9 @@
+*/ declaracion de variables /*
+DIM <var1, a> AS <integer, integer>
+
+*/ asigno valores iniciales /*
+var1 := 120
+
+EQUMAX( 10 + 101; [100, 111, var1] )
+
+EQUMIN( 10 + 101; [100, 111, var1] )
