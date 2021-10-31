@@ -1,0 +1,7 @@
+*/ declaracion de variables /*
+DIM <var1, foo> AS <integer, integer>
+
+foo := 01
+DISPLAY "hola mundo"
+
+
