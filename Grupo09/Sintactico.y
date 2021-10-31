@@ -232,7 +232,43 @@ else_:
 	ELSE
 
 iteracion_while:
-	WHILE CAR_PA condiciones CAR_PC CAR_LA sentencias CAR_LC 
+	WHILE {
+		insertar_pila (&pila, cant_tercetos); //apilo nro celda actual
+	} CAR_PA condiciones CAR_PC CAR_LA sentencias CAR_LC {
+		int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1;
+		char condicion[7], destino[7];
+		int tipo_condicion = sacar_pila (&pila_condicion);
+		if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
+			cant_condiciones = 2; /* Solo se permite comparacion entre dos condiciones simple */
+		} 
+		int fin_while = crear_terceto("BI", NULL, NULL); /* Terceto temporal para fin del while */
+		/* Modifico los tercetos temporales de las condiciones */
+		for (i=0; i<cant_condiciones; i++){
+			iCmp = sacar_pila (&comparacion);
+			terceto_condicion = sacar_pila (&pila);
+			sprintf(condicion, "[%d]", terceto_condicion-1);
+			sprintf(destino, "[%d]", fin_while + 1);
+			/* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
+			if (tipo_condicion==COND_OR && i==1){
+				sprintf(destino, "[%d]", segunda_condicion+1);
+				tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp],condicion,destino);
+			} else if (tipo_condicion==COND_NOT){
+				/* Si es NOT, produce el salto cuando se cumple la condicion */
+				tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp],condicion,destino);
+			} else {
+				segunda_condicion = terceto_condicion;
+				tercetos[terceto_condicion] = _crear_terceto(salto[iCmp],condicion,destino);
+			}
+		}
+
+		/* obtengo terceto de inicio de condicion */
+		int inicio_condicion= sacar_pila (&pila);
+		char tmp0[7];
+		// fin del while, completar salto incondicional al inicio condicion
+		sprintf(tmp0, "[%d]", inicio_condicion);
+		tercetos[fin_while]= _crear_terceto("BI", tmp0, NULL);		
+		itoa(fin_while, $<stringValue>$, 10); //coloco nro terceto fin while
+	}
 
 iteracion_for:
 	FOR ID OP_ASIG expresion TO expresion NEXT ID |

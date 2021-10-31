@@ -1,0 +1,6 @@
+DIM <a, b, c> AS <integer, integer, integer>
+
+WHILE(a > b || a==c)
+{
+    a:= a * 1
+}
