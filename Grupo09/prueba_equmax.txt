@@ -6,15 +6,4 @@ var1 := 120
 
 EQUMAX( 10 + 101; [100, 111, var1] )
 
-*/será falsa/*
-
-IF ( a == 1 ) THEN
-{
-	DISPLAY "esta en la lista y es máximo"
-}
-ELSE
-{
-	DISPLAY "no esta en la lista o esta y no es máximo"
-}
-
-GET a
+EQUMIN( 10 + 101; [100, 111, var1] )

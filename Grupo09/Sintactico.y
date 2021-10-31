@@ -32,8 +32,12 @@
 	int yyparse();
 	
 	int yylex();
-	int yyerror();	
+	int yyerror();
 
+	enum equal {
+		max = 0, 
+		min = 1
+	} equal;
 %}
 
 %union{
@@ -275,14 +279,57 @@ iteracion_for:
 	FOR ID OP_ASIG expresion TO expresion CAR_CA constante CAR_CC NEXT ID
 	
 operacion_equmax:
-	EQUMAX CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
+	EQUMAX { equal = max;} CAR_PA expresion {
+		crear_terceto(":=", "@eq_result", "0");
+		crear_terceto(":=", "@expr", $<stringValue>3);
+	} CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC {
+		int Eind;
+		Eind = crear_terceto("CMP", "@max", "@expr");
+		crear_terceto("BNE", "@max", str_terceto_number(Eind+3));
+		crear_terceto(":=", "@eq_result", "1");
+	}
 	
 operacion_equmin:
-	EQUMIN CAR_PA expresion CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
+	EQUMIN  { equal = max;} CAR_PA expresion {
+		crear_terceto(":=", "@eq_result", "0");
+		crear_terceto(":=", "@expr", $<stringValue>3);
+	} CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC {
+		int Eind;
+		Eind = crear_terceto("CMP", "@min", "@expr");
+		crear_terceto("BNE", "@min", str_terceto_number(Eind+3));
+		crear_terceto(":=", "@eq_result", "1");
+	}
 
 lista_variables:
-	factor CAR_COMA lista_variables |
-	factor
+	factor CAR_COMA lista_variables {
+		if(equal == min)
+		{
+			int Xind;
+			Xind = crear_terceto(":=", "@aux", $<stringValue>3);
+			$<stringValue>$ = str_terceto_number(crear_terceto("CMP", "@aux", "@min"));
+			char Xind4[7];
+			sprintf(Xind4, "[%d]", Xind+4);
+			$<stringValue>$ = str_terceto_number(crear_terceto("BLE", "@aux", Xind4));
+			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", "@aux"));				
+		}
+		else
+		{
+			int Xind;
+			Xind = crear_terceto(":=", "@aux", $<stringValue>3);
+			$<stringValue>$ = str_terceto_number(crear_terceto("CMP", "@aux", "@max"));
+			char Xind4[7];
+			sprintf(Xind4, "[%d]", Xind+4);
+			$<stringValue>$ = str_terceto_number(crear_terceto("BLE", "@aux", Xind4));
+			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", "@aux"));
+		}
+		
+	} |
+	factor {
+		if(equal == min)
+			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", $<stringValue>$));
+		else
+			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", $<stringValue>$));
+	}
 	
 condiciones:
 	condicion {

@@ -1,6 +1,9 @@
  Nombre                          | Tipo          | Valor                          | Longitud |
 ---------------------------------|---------------|--------------------------------|----------|
 var1                             |INT            |                                |0         |
-foo                              |INT            |                                |0         |
-_01                              |CTE_INT        |01                              |0         |
-_hola_mundo                      |CTE_STRING     |"hola mundo"                    |12        |
+a                                |INT            |                                |0         |
+_120                             |CTE_INT        |120                             |0         |
+_10                              |CTE_INT        |10                              |0         |
+_101                             |CTE_INT        |101                             |0         |
+_100                             |CTE_INT        |100                             |0         |
+_111                             |CTE_INT        |111                             |0         |
