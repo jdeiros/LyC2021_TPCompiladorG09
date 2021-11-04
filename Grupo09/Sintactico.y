@@ -129,10 +129,10 @@ declaracion_tipo:
 	STRING 		{actualizarTipoDato(T_STRING); printf("STRING ");}
 
 sentencias:
-	sentencias operacion {printf("FIN OPERACION \n");}
+	sentencias operacion {printf("FIN OPERACION \n"); }
 
 sentencias:
-	operacion
+	operacion 
 
 operacion:
 	operacion_if 		{printf("IF \n");}|
@@ -151,6 +151,7 @@ operacion_if:
 			   if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
 				   cant_condiciones = 2;
 			   } 
+			   int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
 			   /* Modifico los tercetos temporales de las condiciones */
 			   for (i=0; i<cant_condiciones; i++){
 				   iCmp = sacar_pila (&comparacion);
@@ -159,7 +160,7 @@ operacion_if:
 				   sprintf(condicion, "[%d]", terceto_condicion-1);
 				   printf("condicion: %s\n",condicion);
 				   
-				   sprintf(destino, "[%d]", atoi($<stringValue>7)+1);
+				   sprintf(destino, "[%d]", fin_if);
 				   printf("destino: %s\n", destino);
 				   
 				   /* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
@@ -177,6 +178,8 @@ operacion_if:
 				   }
 			   }
                $<stringValue>$ =string_from_cte(atoi( $<stringValue>7)+1);
+			   itoa(fin_if, $<stringValue>$, 10);
+			   printf("y este que onda: %s\n", string_from_cte(atoi( $<stringValue>8)+1));
            }
 
 operacion_if:
@@ -187,6 +190,7 @@ operacion_if:
 			   if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
 				   cant_condiciones = 2;
 			   } 
+			   int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
 			   /* Modifico los tercetos temporales de las condiciones */
 			   for (i=0; i<cant_condiciones; i++){
 				   iCmp = sacar_pila (&comparacion);
@@ -195,7 +199,7 @@ operacion_if:
 				   sprintf(condicion, "[%d]", terceto_condicion-1);
 				   printf("condicion: %s\n",condicion);
 				   
-				   sprintf(destino, "[%d]", atoi($<stringValue>7)+2);
+				   sprintf(destino, "[%d]", fin_if);
 				   printf("destino: %s\n", destino);
 				   
 				   /* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
@@ -212,19 +216,19 @@ operacion_if:
 					   tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], condicion, destino);
 				   }
 			   }
-			   insertar_pila(&pila, crear_terceto("###", NULL, NULL)); /* guardo fin_then para el else */
+			   //insertar_pila(&pila, crear_terceto("###", NULL, NULL)); /* guardo fin_then para el else */
                $<stringValue>$ =string_from_cte(atoi( $<stringValue>7));
            }
 		   else_ {
                // creo un terceto temporal donde colocare el salto del then
-               //int fin_then = crear_terceto("Temporal", NULL, NULL);
-               //insertar_pila (&pila, fin_then);
+               int fin_then = crear_terceto("BI", NULL, NULL);
+               insertar_pila (&pila, fin_then);
            }
 		   CAR_LA sentencias CAR_LC {
 				// creo el salto al ultimo terceto del else
 				int fin_then = sacar_pila (&pila);
 				char destino[7];
-				sprintf(destino, "[%d]", string_from_cte(atoi($<stringValue>13)+1));
+				sprintf(destino, "[%d]", fin_then+1);
 				tercetos[fin_then] = _crear_terceto("BI", destino, NULL);
 				$<stringValue>$ = string_from_cte(atoi($<stringValue>13)+1);
            }

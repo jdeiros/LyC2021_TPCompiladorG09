@@ -1,30 +1,12 @@
  Nombre                          | Tipo          | Valor                          | Longitud |
 ---------------------------------|---------------|--------------------------------|----------|
-A                                |INT            |                                |0         |
-B                                |INT            |                                |0         |
-C                                |INT            |                                |0         |
-D                                |INT            |                                |0         |
-E                                |INT            |                                |0         |
-var1                             |INT            |                                |0         |
-_5                               |CTE_INT        |5                               |0         |
-_10                              |CTE_INT        |10                              |0         |
-_15                              |CTE_INT        |15                              |0         |
-W                                |ID             |                                |0         |
-_1p40                            |CTE_FLOAT      |1.40                            |0         |
-_120                             |CTE_INT        |120                             |0         |
-_101                             |CTE_INT        |101                             |0         |
-_100                             |CTE_INT        |100                             |0         |
-_111                             |CTE_INT        |111                             |0         |
-_1                               |CTE_INT        |1                               |0         |
-_4                               |CTE_INT        |4                               |0         |
-_8                               |CTE_INT        |8                               |0         |
-G                                |ID             |                                |0         |
-_9                               |CTE_INT        |9                               |0         |
+a                                |INT            |                                |0         |
+b                                |INT            |                                |0         |
+c                                |INT            |                                |0         |
 _3                               |CTE_INT        |3                               |0         |
-_IF_anidado                      |CTE_STRING     |"IF anidado"                    |12        |
-_condicion_compuesta             |CTE_STRING     |"condicion compuesta"           |21        |
-_IF_exterior                     |CTE_STRING     |"IF exterior"                   |13        |
-_regla_de_IF_con_ELSE            |CTE_STRING     |"regla de IF con ELSE"          |22        |
-_HOLA                            |CTE_STRING     |"HOLA"                          |6         |
-_HOLA_TODO_BIEN                  |CTE_STRING     |"HOLA TODO BIEN"                |16        |
-_Mostrar_por_pantalla            |CTE_STRING     |"Mostrar por pantalla"          |22        |
+_1                               |CTE_INT        |1                               |0         |
+_chanchito_feliz                 |CTE_STRING     |"chanchito feliz"               |17        |
+_9                               |CTE_INT        |9                               |0         |
+_8                               |CTE_INT        |8                               |0         |
+_todavia_en_else                 |CTE_STRING     |"todavia en else"               |17        |
+_estoy_fuera                     |CTE_STRING     |"estoy fuera"                   |13        |
