@@ -3,10 +3,6 @@
 a                                |INT            |                                |0         |
 b                                |INT            |                                |0         |
 c                                |INT            |                                |0         |
-_3                               |CTE_INT        |3                               |0         |
-_1                               |CTE_INT        |1                               |0         |
-_chanchito_feliz                 |CTE_STRING     |"chanchito feliz"               |17        |
-_9                               |CTE_INT        |9                               |0         |
-_8                               |CTE_INT        |8                               |0         |
-_todavia_en_else                 |CTE_STRING     |"todavia en else"               |17        |
-_estoy_fuera                     |CTE_STRING     |"estoy fuera"                   |13        |
+_hola_mundo_if                   |CTE_STRING     |"hola mundo if"                 |15        |
+_hola_mundo_else                 |CTE_STRING     |"hola mundo else"               |17        |
+_hola_mundo_exterior             |CTE_STRING     |"hola mundo exterior"           |21        |
