@@ -34,10 +34,10 @@
 	int yylex();
 	int yyerror();
 
-	enum equmax_equmin {
-		equmax = 0, 
-		equmin = 1
-	} equmax_equmin;
+	enum enum_equmax_equmin {
+		equmax_enum = 0, 
+		equmin_enum = 1
+	} enum_equmax_equmin;
 
 	int EQind = -1;	//indice para equmax_equmin
 	int Xind = -1; 	//indice para Salto en equmax_equmin
@@ -302,52 +302,46 @@ iteracion_for:
 	FOR ID OP_ASIG expresion TO expresion CAR_CA constante CAR_CC NEXT ID
 	
 operacion_equmax:
-	EQUMAX { equmax_equmin = equmax;} CAR_PA expresion {
-		crear_terceto(":=", "@eq_result", "0");
-		crear_terceto(":=", "@expr", $<stringValue>3);
-	} CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC {
-		EQind = crear_terceto("CMP", "@max", "@expr");
-		crear_terceto("BNE", "@max", str_terceto_number(EQind+3));
-		crear_terceto(":=", "@eq_result", "1");
-	}
+	EQUMAX { enum_equmax_equmin = equmax_enum;} CAR_PA expresion {
+		crear_terceto(":=", "@expr", str_terceto_number(Eind));
+	} CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC 
 	
 operacion_equmin:
-	EQUMIN  { equmax_equmin = equmax;} CAR_PA expresion {
-		crear_terceto(":=", "@eq_result", "0");
-		crear_terceto(":=", "@expr", $<stringValue>3);
-	} CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC {
-		EQind = crear_terceto("CMP", "@min", "@expr");
-		crear_terceto("BNE", "@min", str_terceto_number(EQind+3));
-		crear_terceto(":=", "@eq_result", "1");
-	}
+	EQUMIN  { enum_equmax_equmin = equmin_enum;} CAR_PA expresion {		
+		crear_terceto(":=", "@expr", str_terceto_number(Eind));
+	} CAR_PYC CAR_CA lista_variables CAR_CC CAR_PC
 
 lista_variables:
 	factor CAR_COMA lista_variables {
-		if(equmax_equmin == equmin)
+		char Xind4[7];
+		switch(enum_equmax_equmin)
 		{
-			Xind = crear_terceto(":=", "@aux", $<stringValue>3);
-			$<stringValue>$ = str_terceto_number(crear_terceto("CMP", "@aux", "@min"));
-			char Xind4[7];
-			sprintf(Xind4, "[%d]", Xind+4);
-			$<stringValue>$ = str_terceto_number(crear_terceto("BLE", "@aux", Xind4));
-			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", "@aux"));				
-		}
-		else
-		{
-			Xind = crear_terceto(":=", "@aux", $<stringValue>3);
-			$<stringValue>$ = str_terceto_number(crear_terceto("CMP", "@aux", "@max"));
-			char Xind4[7];
-			sprintf(Xind4, "[%d]", Xind+4);
-			$<stringValue>$ = str_terceto_number(crear_terceto("BLE", "@aux", Xind4));
-			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", "@aux"));
-		}
-		
+			case equmin_enum:
+				Xind = crear_terceto(":=", "@aux", $<stringValue>1);
+				EQind = crear_terceto("CMP", "@aux", "@min");				
+				sprintf(Xind4, "[%d]", Xind+4);
+				$<stringValue>$ = str_terceto_number(crear_terceto("BGE", str_terceto_number(EQind), Xind4));
+				$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", "@aux"));
+				break;
+			case equmax_enum:
+				Xind = crear_terceto(":=", "@aux", $<stringValue>1);
+				EQind = crear_terceto("CMP", "@aux", "@max");
+				sprintf(Xind4, "[%d]", Xind+4);
+				$<stringValue>$ = str_terceto_number(crear_terceto("BLE", str_terceto_number(EQind), Xind4));
+				$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", "@aux"));
+				break;
+		}		
 	} |
 	factor {
-		if(equmax_equmin == equmin)
-			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", $<stringValue>$));
-		else
-			$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", $<stringValue>$));
+		switch(enum_equmax_equmin)
+		{
+			case equmin_enum:
+				$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", $<stringValue>$));
+				break;
+			case equmax_enum:
+				$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", $<stringValue>$));
+				break;
+		}			
 	}
 	
 condiciones:
@@ -377,7 +371,17 @@ condicion:
 		/* aviso que operacion hay que hacer */
         insertar_pila(&comparacion, atoi($<intValue>2));
         $<stringValue>$ = str_terceto_number(crear_terceto("CMP", $<stringValue>1, $<stringValue>3)); 
+	}|
+	operacion_equmax {
+		insertar_pila(&comparacion, CTE_CMP_IGUAL);
+		$<stringValue>$ = str_terceto_number(crear_terceto("CMP", "@max", "@expr"));
+		
+	}|
+	operacion_equmin{
+		insertar_pila(&comparacion, CTE_CMP_IGUAL);
+		$<stringValue>$ = str_terceto_number(crear_terceto("CMP", "@min", "@expr"));
 	}
+	
 
 operador:
 	CMP_IGUAL 		{$<intValue>$ = string_from_cte(CTE_CMP_IGUAL);}|
@@ -387,9 +391,8 @@ operador:
 	CMP_MENORIGUAL 	{$<intValue>$ = string_from_cte(CTE_CMP_MENOR_IGUAL);}|
 	CMP_MAYORIGUAL 	{$<intValue>$ = string_from_cte(CTE_CMP_MAYOR_IGUAL);}
 
-
 asignacion:	
-	ID OP_ASIG expresion {$<stringValue>$ = str_terceto_number(crear_terceto(":=", $<stringValue>1, str_terceto_number(Eind))); }
+	ID OP_ASIG expresion {$<stringValue>$ = str_terceto_number(crear_terceto(":=", $<stringValue>1,  $<stringValue>3)); }
 
 expresion:
 	expresion OP_RES termino 	 {
@@ -398,16 +401,17 @@ expresion:
 								}|
 	expresion OP_SUM termino 	 {
 									Eind = crear_terceto("+", $<stringValue>1, $<stringValue>3);
-									$<stringValue>$ = str_terceto_number(Eind); }|
-	termino
+									$<stringValue>$ = str_terceto_number(Eind); 
+								}|
+	termino 					{	Eind = terceto_number($<stringValue>1);}
 
 termino:
 	termino OP_MUL factor 	{ 
-								Tind = crear_terceto("*", str_terceto_number(Tind), $<stringValue>3); 
+								Tind = crear_terceto("*", $<stringValue>1, $<stringValue>3); 
 								$<stringValue>$ = str_terceto_number(Tind); 
 							}|	
 	termino OP_DIV factor 	{ 
-								Tind = crear_terceto("/", str_terceto_number(Tind), $<stringValue>3); 
+								Tind = crear_terceto("/", $<stringValue>1, $<stringValue>3); 
 								$<stringValue>$ = str_terceto_number(Tind); 
 							}|
 	factor

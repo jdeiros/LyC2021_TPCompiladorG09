@@ -1,11 +1,9 @@
 DIM <a, b, c> AS <integer, integer, integer>
 
-if (a < b || a == c) then {
-    if (a >= c) then {
-            a := c + b
-            DISPLAY "hola mundo"
-        }
+if (a < b && a == c) then {
+    DISPLAY "hola mundo if"
 }
-else {
-    DISPLAY "chau mundo"
+else {    
+    DISPLAY "hola mundo else"
 }
+DISPLAY "hola mundo exterior"

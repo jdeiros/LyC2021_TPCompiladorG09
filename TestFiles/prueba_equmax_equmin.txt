@@ -1,0 +1,17 @@
+*/ declaracion de variables /*
+DIM <var1, a, v2> AS <integer, integer, integer>
+
+*/ asigno valores iniciales /*
+var1 := 120
+v2 := 34
+
+
+if (EQUMIN( 10 + 101; [100, 111, var1] )) then {
+    DISPLAY "hola mundo if"
+}
+
+
+while(EQUMAX( 3*4; [66, 140, var1] ))
+{
+    a:= a * 1
+}
