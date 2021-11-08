@@ -298,8 +298,36 @@ iteracion_while:
 	}
 
 iteracion_for:
-	FOR ID OP_ASIG expresion TO expresion NEXT ID |
-	FOR ID OP_ASIG expresion TO expresion CAR_CA constante CAR_CC NEXT ID
+	FOR ID OP_ASIG expresion TO expresion  {
+		crear_terceto(":=", "@iterfor", $<stringValue>4);
+		crear_terceto(":=", "@forend", $<stringValue>6);
+		crear_terceto("CMP", "@iterfor", "@forend");
+		insertar_pila (&pila, cant_tercetos); //apilo nro celda actual para volver a cmp
+		crear_terceto("BGE", NULL, NULL);		
+	} 
+	sentencias NEXT ID {
+		crear_terceto(":=", "@iterfor", str_terceto_number(crear_terceto("+", "@iterfor", "1")));
+		int terc_cond =sacar_pila (&pila);
+		int terc_cmp = terc_cond-1;
+		crear_terceto("BI", str_terceto_number(terc_cmp), NULL);
+		tercetos[terc_cond] =  _crear_terceto("BGE", str_terceto_number(cant_tercetos), NULL);
+	} |
+
+	FOR ID OP_ASIG expresion TO expresion {
+		crear_terceto(":=", "@iterfor", $<stringValue>4);
+		crear_terceto(":=", "@forend", $<stringValue>6);
+		crear_terceto("CMP", "@iterfor", "@forend");
+		insertar_pila (&pila, cant_tercetos); //apilo nro celda actual para volver a cmp
+		crear_terceto("BGE", NULL, NULL);		
+	}
+	CAR_CA constante CAR_CC sentencias NEXT ID {
+		/* en $<stringValue>10 tengo el valor de la [step cte] */
+		crear_terceto(":=", "@iterfor", str_terceto_number(crear_terceto("+", "@iterfor", $<stringValue>10))); 
+		int terc_cond =sacar_pila (&pila);
+		int terc_cmp = terc_cond-1;
+		crear_terceto("BI", str_terceto_number(terc_cmp), NULL);
+		tercetos[terc_cond] =  _crear_terceto("BGE", str_terceto_number(cant_tercetos), NULL);
+	}
 	
 operacion_equmax:
 	EQUMAX { enum_equmax_equmin = equmax_enum;} CAR_PA expresion {
