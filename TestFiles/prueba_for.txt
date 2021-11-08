@@ -1,0 +1,6 @@
+DIM <x, y> AS <integer, integer>
+
+FOR x := 3+6 TO 66-y [2]
+	DISPLAY "hey"
+NEXT x
+DISPLAY "go"

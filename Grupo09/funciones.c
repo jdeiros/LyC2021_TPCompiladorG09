@@ -279,7 +279,7 @@ int crear_terceto(const char *t1, const char *t2, const char *t3)
 }
 
 char * str_terceto_number(int numero)
-{	
+{		
 	// devuelvo numero de terceto en un string con formato [n]
 	char * aux = (char *) malloc(sizeof(numero));
 	char * terceto = (char *) malloc(sizeof('[') + sizeof(numero) + sizeof(']'));
@@ -307,16 +307,16 @@ void limpiar_tercetos()
 	for (i = 0; i < cant_tercetos; i++)
 		free(tercetos[i]);
 }
-int terceto_number(char * terceto_number_enclosed)
+int terceto_number(char * cadena)
 {
-	int index=1, position;
-	char str_terceto_number[strlen(terceto_number_enclosed)];
+	int i, longitud = strlen(cadena)-2, inicio = 1;
+	char subcadena[strlen(cadena)];
 
-	while (index < strlen(terceto_number_enclosed)-1) {
-      str_terceto_number[index] = terceto_number_enclosed[index];
-	  index++;
-   	}
-	return atoi(str_terceto_number);
+	for(i=0; i<longitud && inicio+i < strlen(cadena); i++)
+		subcadena[i] = cadena[inicio+i];
+
+	subcadena[i] = '\0';
+	return atoi(subcadena);
 }
 
 /** inserta un entero en la pila */
