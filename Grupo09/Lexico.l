@@ -75,6 +75,8 @@ string|STRING			{ return STRING; }
 "!"						{ return NOT; }
 
 {ID} 					{   yylval.stringValue = strdup(yytext);
+							printf("debug::::::> inserto valor %s en TS lo hago como tipo: %d\n",yylval.stringValue, T_ID);
+							mostrarTablaSimbolos();
 							insertarTablaSimbolos(yylval.stringValue, T_ID, "", 0);
 							return ID; }
 {CONST_INT}				{
@@ -82,8 +84,8 @@ string|STRING			{ return STRING; }
 								printf( "El entero ingresado supera la cantidad maxima permitida. Cantidad: %d\n", COTA_INT);
 								exit(1);
 							}
-							//insertarTokenEnTS("CONST_INT", strdup(yytext), 0, yytext);
 							insertarTablaSimbolos(indicarNombreConstante(strdup(yytext)), T_CTE_INTEGER, strdup(yytext), 0);
+							mostrarTablaSimbolos();
 							yylval.intValue = strdup(yytext); 
 							printf( "Entero en lexico: %d\n", yylval.intValue); 
 							return CONST_INT;

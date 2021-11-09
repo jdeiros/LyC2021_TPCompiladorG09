@@ -150,9 +150,9 @@ lista_declaracion_tipos:
 	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT); printf("--> integer ");}|
-	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("--> real ");}|
-	STRING 		{actualizarTipoDato(T_STRING); printf("--> STRING ");}
+	INT 		{actualizarTipoDato(T_INT);mostrarTablaSimbolos(); printf("--> integer ");}|
+	FLOAT 		{actualizarTipoDato(T_FLOAT); mostrarTablaSimbolos(); printf("--> real ");}|
+	STRING 		{actualizarTipoDato(T_STRING); mostrarTablaSimbolos(); printf("--> STRING ");}
 
 sentencias:
 	sentencias operacion {printf("FIN OPERACION \n"); }

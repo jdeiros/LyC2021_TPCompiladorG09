@@ -2,9 +2,9 @@
 ---------------------------------|---------------|--------------------------------|----------|
 x                                |INT            |                                |0         |
 y                                |INT            |                                |0         |
-a                                |INT            |                                |0         |
-b                                |INT            |                                |0         |
-s1                               |INT            |                                |0         |
-s2                               |INT            |                                |0         |
+a                                |FLOAT          |                                |0         |
+b                                |FLOAT          |                                |0         |
+s1                               |STRING         |                                |0         |
+s2                               |STRING         |                                |0         |
 _hola_mundo                      |CTE_STRING     |"hola mundo"                    |12        |
 _go                              |CTE_STRING     |"go"                            |4         |
