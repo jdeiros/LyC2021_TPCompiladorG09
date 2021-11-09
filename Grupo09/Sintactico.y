@@ -150,9 +150,9 @@ lista_declaracion_tipos:
 	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT);mostrarTablaSimbolos(); printf("--> integer ");}|
-	FLOAT 		{actualizarTipoDato(T_FLOAT); mostrarTablaSimbolos(); printf("--> real ");}|
-	STRING 		{actualizarTipoDato(T_STRING); mostrarTablaSimbolos(); printf("--> STRING ");}
+	INT 		{actualizarTipoDato(T_INT);}|
+	FLOAT 		{actualizarTipoDato(T_FLOAT);}|
+	STRING 		{actualizarTipoDato(T_STRING);}
 
 sentencias:
 	sentencias operacion {printf("FIN OPERACION \n"); }
@@ -510,7 +510,6 @@ int main(int argc,char *argv[])
         escribir_tercetos(intermedia);
 		printf("Mostrando tercetos guardados: \n");
         escribir_tercetos(stdout);
-		mostrarTablaSimbolos();
     }
 	// libero memoria de tercetos
     limpiar_tercetos();

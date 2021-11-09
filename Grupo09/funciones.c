@@ -34,7 +34,6 @@ int tsCrearArchivo()
 void insertarTablaSimbolos(char *nombre, int tipo, char *dato, int longitud)
 {
 	int i;
-	printf("debug: insertarTablaSimbolos -> Nombre: %s, tipo: %d, dato: %s, longitud: %d\n", nombre, tipo, dato, longitud);
 	for (i = 0; i < posActualTablaSimbolos; i++)
 		if (strcmp(tablaSimbolos[i].nombre, nombre) == 0)
 		{
@@ -46,7 +45,6 @@ void insertarTablaSimbolos(char *nombre, int tipo, char *dato, int longitud)
 	strcpy(tmp.dato, dato);
 	tmp.longitud = longitud;
 	tablaSimbolos[posActualTablaSimbolos++] = tmp;
-	printf("debug: insertado ->simbolo: {Nombre: %s, tipo: %d, dato: %s, longitud: %d}\n", tmp.nombre, tmp.tipo, tmp.dato, tmp.longitud);
 }
 
 void mostrarTablaSimbolos()
@@ -148,18 +146,12 @@ void actualizarTipoDato(int tipo)
 {
 	int i;
 	int tipo_simb;
-	printf("1. DEBUG::::::::::::: viene tipo: %d\n", tipo);
-	mostrarTablaSimbolos();
 	for (i = 0; i < posActualTablaSimbolos; i++)
 	{
 		tipo_simb = tablaSimbolos[i].tipo;
-		printf("2. DEBUG::::::::::::: tipo actual: %d\n", tipo_simb);
-		mostrarTablaSimbolos();
 		if (tipo_simb == T_ID)
 		{
 			tablaSimbolos[i].tipo = tipo;
-			printf("3. DEBUG::::::::::::: nuevo tipo: %d\n", tablaSimbolos[i].tipo);
-			mostrarTablaSimbolos();
 			break;
 		}
 	}
