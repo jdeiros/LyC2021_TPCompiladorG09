@@ -39,6 +39,10 @@
 		equmin_enum = 1
 	} enum_equmax_equmin;
 
+	//Variables para declaraciones
+	char* pila_declaraciones[30];
+	int tope_pila_declaraciones = 0;
+	
 	int EQind = -1;	//indice para equmax_equmin
 	int Xind = -1; 	//indice para Salto en equmax_equmin
 	int Eind = -1; 	//indice para Expresion
@@ -112,27 +116,43 @@ programa: {printf("INICIO PROGRAMA\n");}
 	sentencias {printf("FIN SENTENCIAS\n"); }
 
 declaracion_var: 
-	DIM {printf("DIM ");} 
-	CMP_MENOR {printf(" < ");}
+	DIM 
+	CMP_MENOR 
 	lista_declaracion_var
-	CMP_MAYOR {printf(" > ");}
-	AS {printf("AS\n");}
-	CMP_MENOR {printf(" < ");}
+	CMP_MAYOR 
+	AS
+	CMP_MENOR 
 	lista_declaracion_tipos 
-	CMP_MAYOR {printf(" > ");}
+	CMP_MAYOR
 
 lista_declaracion_var:
-	lista_declaracion_var CAR_COMA ID {printf(" id ");} |
-	ID {printf(" id1 ");}
+	lista_declaracion_var CAR_COMA ID {
+		if(buscarDatoDePila(pila_declaraciones, &tope_pila_declaraciones, $<stringValue>3)) {
+			printf("Error :: Variable %s ya declarada.\n", yylval.stringValue);
+			system("pause");
+			exit(1);
+		} else {
+			apilar(yylval.stringValue, pila_declaraciones, &tope_pila_declaraciones);
+		}
+	} |
+	ID {	
+			if(buscarDatoDePila(pila_declaraciones, &tope_pila_declaraciones, yylval.stringValue)) {
+				printf("Error :: Variable %s ya declarada.\n", yylval.stringValue);
+				system("pause");
+				exit(1);
+			} else {
+				apilar(yylval.stringValue, pila_declaraciones, &tope_pila_declaraciones);
+			}
+	}
 
 lista_declaracion_tipos:
 	lista_declaracion_tipos CAR_COMA declaracion_tipo |
 	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT); printf("integer ");}|
-	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("real ");}|
-	STRING 		{actualizarTipoDato(T_STRING); printf("STRING ");}
+	INT 		{actualizarTipoDato(T_INT); printf("--> integer ");}|
+	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("--> real ");}|
+	STRING 		{actualizarTipoDato(T_STRING); printf("--> STRING ");}
 
 sentencias:
 	sentencias operacion {printf("FIN OPERACION \n"); }

@@ -1,0 +1,6 @@
+DIM <x, y, a, b, s1, s2> AS <integer, integer, real, real, string, string>
+
+s1 := "hola mundo"
+
+DISPLAY s1
+DISPLAY "go"
