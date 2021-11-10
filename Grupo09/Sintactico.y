@@ -456,6 +456,9 @@ operador:
 asignacion:	
 	ID OP_ASIG expresion {
 		verificarExisteId($<stringValue>1);
+		
+		printf("debug: verificar existe id %s\n", $<stringValue>2);
+
 		tipoDatoVarA = obtenerTipoDato($<stringValue>1);
 		tipoDatoVarB = obtenerTipoDatoTerceto($<stringValue>3);
 		validarTipoDato(tipoDatoVarA,tipoDatoVarB,yylineno, 0);
@@ -514,12 +517,19 @@ constante:
 entrada_salida:
 	GET ID {
 		verificarExisteId($<stringValue>2);
+
+		printf("debug: verificar existe id %s\n", $<stringValue>2);
+		
 		char valor[COTA_STR];
 		obtener_nombre_o_valor($<stringValue>2, valor);
 		$<stringValue>$ = str_terceto_number(crear_terceto ("GET", valor, NULL));
 	} |
 	DISPLAY ID {
 		char valor[COTA_STR];
+		verificarExisteId($<stringValue>2);
+
+		printf("debug: verificar existe id %s\n", $<stringValue>2);
+		
 		obtener_nombre_o_valor($<stringValue>2, valor);
 		$<stringValue>$ = str_terceto_number(crear_terceto ("DISPLAY", valor, NULL));
 	} |

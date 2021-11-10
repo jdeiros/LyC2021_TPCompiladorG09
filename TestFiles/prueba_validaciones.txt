@@ -1,0 +1,6 @@
+DIM <a, pal1> AS <real, string>
+a := 5.4
+pal1 := "try"
+
+get pal1
+display "queso"

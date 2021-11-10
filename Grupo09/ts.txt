@@ -1,4 +1,7 @@
  Nombre                          | Tipo          | Valor                          | Longitud |
 ---------------------------------|---------------|--------------------------------|----------|
 a                                |FLOAT          |                                |0         |
+pal1                             |STRING         |                                |0         |
 _5p4                             |CTE_FLOAT      |5.4                             |0         |
+_try                             |CTE_STRING     |"try"                           |5         |
+_queso                           |CTE_STRING     |"queso"                         |7         |
