@@ -40,6 +40,7 @@ int obtenerTipoDato(char *);
 void verificarExisteId(char *);
 void validarTipoDato(int, int, int, int);
 int obtenerTipoDatoOperacion(int, int);
+int obtenerTipoDatoTerceto(char *);
 
 /*** SECCION UTILITARIOS ***/
 void validarDivisionPorCero(char *);
@@ -52,6 +53,7 @@ typedef struct s_terceto
 		t2[COTA_STR],	// segundo termino
 		t3[COTA_STR];	// tercer termino
 	char aux[COTA_STR]; // nombre variable auxiliar correspondiente
+	int tipo;
 } t_terceto;
 /* coleccion de tercetos */
 t_terceto *tercetos[MAX_TERCETOS];

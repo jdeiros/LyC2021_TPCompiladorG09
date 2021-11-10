@@ -1,3 +1,2 @@
-0 (:=, s1, "hola mundo")
-1 (DISPLAY, s1, )
-2 (DISPLAY, "go", )
+0 (5.4, , )
+1 (:=, a, [0])

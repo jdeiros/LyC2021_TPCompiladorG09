@@ -126,7 +126,7 @@ char *reemplazarCaracter(char *aux)
 /** FUNCION QUE OBTIENE EL TIPO DE DATO DE UN LEXEMA EN LA TS **/
 int obtenerTipoDato(char *valor)
 {
-	int i, auxTipo = -1, flagEncontrado = 0;
+	int i;
 	char *auxNombre;
 
 	for (i = 0; i < posActualTablaSimbolos; i++)
@@ -135,10 +135,21 @@ int obtenerTipoDato(char *valor)
 
 		if (strcmp(auxNombre, valor) == 0)
 		{
-			auxTipo = tablaSimbolos[i].tipo;
+			return tablaSimbolos[i].tipo;
 		}
 	}
-	return auxTipo;
+	//si no encontro por nombre puede ser una cte
+	for (i = 0; i < posActualTablaSimbolos; i++)
+	{
+		//ahora busco por dato
+		auxNombre = tablaSimbolos[i].dato;
+
+		if (strcmp(auxNombre, valor) == 0)
+		{
+			return tablaSimbolos[i].tipo;
+		}
+	}
+	return -1;
 }
 
 //Función actualizar_tipo_dato: Función que recorre la lista de simbolos buscando IDs sin tipo de datos para asignarle el tipo correcto.
@@ -236,6 +247,12 @@ int obtenerTipoDatoOperacion(int td1, int td2)
 	return T_ID;
 }
 
+int obtenerTipoDatoTerceto(char *tercetoNumberEnclosed)
+{
+	int nroTerceto = terceto_number(tercetoNumberEnclosed);
+	return tercetos[nroTerceto]->tipo;
+}
+
 void validarDivisionPorCero(char *dato)
 {
 	if (strcmp(dato, "0") == 0)
@@ -252,6 +269,18 @@ t_terceto *_crear_terceto(const char *t1, const char *t2, const char *t3)
 	t_terceto *terceto = (t_terceto *)malloc(sizeof(t_terceto));
 	// completo sus atributos
 	strcpy(terceto->t1, t1);
+
+	//printf("debug: creando terceto (%s,%s,%s)\n", t1, t2, t3);
+	//printf("debug: tipo dato de %s = %d, tipo de dato de %s = %d)\n", t2, obtenerTipoDato(t2), t3, obtenerTipoDato(t3));
+	if (t2 == NULL && t3 == NULL)
+	{
+		terceto->tipo = obtenerTipoDato((char *)t1);
+	}
+	else
+	{
+		terceto->tipo = ERROR;
+	}
+	// mostrarTablaSimbolos();
 
 	if (t2)
 		strcpy(terceto->t2, t2);
