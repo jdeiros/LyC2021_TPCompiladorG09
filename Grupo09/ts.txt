@@ -1,7 +1,14 @@
  Nombre                          | Tipo          | Valor                          | Longitud |
 ---------------------------------|---------------|--------------------------------|----------|
-a                                |FLOAT          |                                |0         |
-pal1                             |STRING         |                                |0         |
+r1                               |FLOAT          |                                |0         |
+r2                               |FLOAT          |                                |0         |
+i1                               |INT            |                                |0         |
+i2                               |INT            |                                |0         |
+s1                               |STRING         |                                |0         |
+s2                               |STRING         |                                |0         |
 _5p4                             |CTE_FLOAT      |5.4                             |0         |
-_try                             |CTE_STRING     |"try"                           |5         |
-_queso                           |CTE_STRING     |"queso"                         |7         |
+_6p0                             |CTE_FLOAT      |6.0                             |0         |
+_0                               |CTE_INT        |0                               |0         |
+_3                               |CTE_INT        |3                               |0         |
+_hola                            |CTE_STRING     |"hola"                          |6         |
+_mundo                           |CTE_STRING     |"mundo"                         |7         |
