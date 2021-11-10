@@ -1,0 +1,14 @@
+DIM <r1, r2, i1, i2, s1, s2> AS <real, real, integer, integer, string, string>
+
+r1 := 5.4
+r2 := 6.0
+
+i1 := 0
+i2 := 3
+
+s1 := "hola"
+s2 := "mundo"
+
+if(r1 >= r2) then {
+    display s1
+}
