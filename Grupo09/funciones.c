@@ -126,7 +126,7 @@ char *reemplazarCaracter(char *aux)
 /** FUNCION QUE OBTIENE EL TIPO DE DATO DE UN LEXEMA EN LA TS **/
 int obtenerTipoDato(char *valor)
 {
-	int i, auxTipo = -1, flagEncontrado = 0;
+	int i;
 	char *auxNombre;
 
 	for (i = 0; i < posActualTablaSimbolos; i++)
@@ -135,10 +135,21 @@ int obtenerTipoDato(char *valor)
 
 		if (strcmp(auxNombre, valor) == 0)
 		{
-			auxTipo = tablaSimbolos[i].tipo;
+			return tablaSimbolos[i].tipo;
 		}
 	}
-	return auxTipo;
+	//si no encontro por nombre puede ser una cte
+	for (i = 0; i < posActualTablaSimbolos; i++)
+	{
+		//ahora busco por dato
+		auxNombre = tablaSimbolos[i].dato;
+
+		if (strcmp(auxNombre, valor) == 0)
+		{
+			return tablaSimbolos[i].tipo;
+		}
+	}
+	return -1;
 }
 
 //Función actualizar_tipo_dato: Función que recorre la lista de simbolos buscando IDs sin tipo de datos para asignarle el tipo correcto.
@@ -146,14 +157,13 @@ void actualizarTipoDato(int tipo)
 {
 	int i;
 	int tipo_simb;
-
 	for (i = 0; i < posActualTablaSimbolos; i++)
 	{
 		tipo_simb = tablaSimbolos[i].tipo;
-
 		if (tipo_simb == T_ID)
 		{
 			tablaSimbolos[i].tipo = tipo;
+			break;
 		}
 	}
 }
@@ -237,6 +247,12 @@ int obtenerTipoDatoOperacion(int td1, int td2)
 	return T_ID;
 }
 
+int obtenerTipoDatoTerceto(char *tercetoNumberEnclosed)
+{
+	int nroTerceto = terceto_number(tercetoNumberEnclosed);
+	return tercetos[nroTerceto]->tipo;
+}
+
 void validarDivisionPorCero(char *dato)
 {
 	if (strcmp(dato, "0") == 0)
@@ -253,6 +269,18 @@ t_terceto *_crear_terceto(const char *t1, const char *t2, const char *t3)
 	t_terceto *terceto = (t_terceto *)malloc(sizeof(t_terceto));
 	// completo sus atributos
 	strcpy(terceto->t1, t1);
+
+	//printf("debug: creando terceto (%s,%s,%s)\n", t1, t2, t3);
+	//printf("debug: tipo dato de %s = %d, tipo de dato de %s = %d)\n", t2, obtenerTipoDato(t2), t3, obtenerTipoDato(t3));
+	if (t2 == NULL && t3 == NULL)
+	{
+		terceto->tipo = obtenerTipoDato((char *)t1);
+	}
+	else
+	{
+		terceto->tipo = ERROR;
+	}
+	// mostrarTablaSimbolos();
 
 	if (t2)
 		strcpy(terceto->t2, t2);
@@ -278,15 +306,15 @@ int crear_terceto(const char *t1, const char *t2, const char *t3)
 	return numero;
 }
 
-char * str_terceto_number(int numero)
-{		
+char *str_terceto_number(int numero)
+{
 	// devuelvo numero de terceto en un string con formato [n]
-	char * aux = (char *) malloc(sizeof(numero));
-	char * terceto = (char *) malloc(sizeof('[') + sizeof(numero) + sizeof(']'));
-	itoa(numero,aux,10);	
-	strcpy(terceto,"[");
-	strcat(terceto,aux);
-	strcat(terceto,"]");
+	char *aux = (char *)malloc(sizeof(numero));
+	char *terceto = (char *)malloc(sizeof('[') + sizeof(numero) + sizeof(']'));
+	itoa(numero, aux, 10);
+	strcpy(terceto, "[");
+	strcat(terceto, aux);
+	strcat(terceto, "]");
 	return terceto;
 }
 
@@ -307,53 +335,58 @@ void limpiar_tercetos()
 	for (i = 0; i < cant_tercetos; i++)
 		free(tercetos[i]);
 }
-int terceto_number(char * cadena)
+int terceto_number(char *cadena)
 {
-	int i, longitud = strlen(cadena)-2, inicio = 1;
+	int i, longitud = strlen(cadena) - 2, inicio = 1;
 	char subcadena[strlen(cadena)];
 
-	for(i=0; i<longitud && inicio+i < strlen(cadena); i++)
-		subcadena[i] = cadena[inicio+i];
+	for (i = 0; i < longitud && inicio + i < strlen(cadena); i++)
+		subcadena[i] = cadena[inicio + i];
 
 	subcadena[i] = '\0';
 	return atoi(subcadena);
 }
 
 /** inserta un entero en la pila */
-void insertar_pila (t_pila *p, int valor) {
-    // creo nodo
-    t_nodo *nodo = (t_nodo*) malloc (sizeof(t_nodo));
-    // asigno valor
-    nodo->valor = valor;
-    // apunto al elemento siguiente
-    nodo->sig = *p;
-    // apunto al tope de la pila
-    *p = nodo;
+void insertar_pila(t_pila *p, int valor)
+{
+	// creo nodo
+	t_nodo *nodo = (t_nodo *)malloc(sizeof(t_nodo));
+	// asigno valor
+	nodo->valor = valor;
+	// apunto al elemento siguiente
+	nodo->sig = *p;
+	// apunto al tope de la pila
+	*p = nodo;
 }
 
 /** obtiene un entero de la pila */
-int sacar_pila(t_pila *p) {
-    int valor = ERROR;
-    t_nodo *aux;
-    if (*p != NULL) {
-       aux = *p;
-       valor = aux->valor;
-       *p = aux->sig;
-       free(aux);
-    }
-    return valor;
+int sacar_pila(t_pila *p)
+{
+	int valor = ERROR;
+	t_nodo *aux;
+	if (*p != NULL)
+	{
+		aux = *p;
+		valor = aux->valor;
+		*p = aux->sig;
+		free(aux);
+	}
+	return valor;
 }
 
 /** crea una estructura de pila */
-void crear_pila(t_pila *p) {
-    *p = NULL;
+void crear_pila(t_pila *p)
+{
+	*p = NULL;
 }
 
 /** destruye pila */
-void destruir_pila(t_pila *p) {
-    while ( ERROR != sacar_pila(p));
+void destruir_pila(t_pila *p)
+{
+	while (ERROR != sacar_pila(p))
+		;
 }
-
 
 /* inicializaciones globales*/
 void init()
@@ -367,22 +400,21 @@ void init()
 
 	cant_tercetos = 0;
 	crear_pila(&pila);
-    crear_pila(&comparacion);
+	crear_pila(&comparacion);
 	crear_pila(&pila_condicion);
 }
 
-
-char * string_from_cte(int cte)
+char *string_from_cte(int cte)
 {
-	char * str_cte = (char *) malloc(sizeof(cte));
-	itoa(cte,str_cte,10);	
-	
+	char *str_cte = (char *)malloc(sizeof(cte));
+	itoa(cte, str_cte, 10);
+
 	return str_cte;
 }
 
-
 /** Obtiene nombre o valor del elemento en posicion i en la tabla de simbolos */
-void obtener_nombre_o_valor(char* lex, char* destino) {
+void obtener_nombre_o_valor(char *lex, char *destino)
+{
 	int i, auxTipo, flagEncontrado = 0;
 	char *auxNombre;
 
@@ -407,4 +439,122 @@ void obtener_nombre_o_valor(char* lex, char* destino) {
 		system("Pause");
 		exit(1);
 	}
+}
+
+/**************** 	FUNCIONES PILA	********************/
+
+void recorrerPila(char *pila[], int *tope)
+{
+	int x;
+
+	for (x = 0; x < (*tope); x++)
+		printf("\t\t\t POSICION :: %d  ----- DATO %s\n\n", x, pila[x]);
+}
+
+int desapilar(char *pila[], int *tope)
+{
+	if (pilaVacia((*tope)) == 0)
+	{
+		char *dato = pila[(*tope) - 1];
+
+		(*tope)--;
+		//printf("\tDESAPILAR #CELDA -> %s de posicion : %d \n", dato, *tope);
+
+		return atoi(dato);
+	}
+	else
+	{
+		printf("Error: La pila esta vacia.\n");
+		system("Pause");
+		exit(1);
+	}
+}
+
+char *desapilarChar(char *pila[], int *tope)
+{
+	if (pilaVacia((*tope)) == 0)
+	{
+		char *dato = pila[(*tope) - 1];
+
+		(*tope)--;
+		//printf("\tDESAPILAR #CELDA -> %s de posicion : %d \n", dato, *tope);
+
+		return dato;
+	}
+	else
+	{
+		printf("Error: La pila esta vacia.\n");
+		system("Pause");
+		exit(1);
+	}
+}
+
+void apilar(char *dato, char *pila[], int *tope)
+{
+	if (pilaLlena((*tope)) == 1)
+	{
+		printf("Error: Se excedio el tamano de la pila.\n");
+		system("Pause");
+		exit(1);
+	}
+
+	pila[(*tope)] = (char *)malloc(sizeof(char) * (strlen(dato) + 1));
+	strcpy(pila[(*tope)], dato);
+	//printf("\tAPILAR #CELDA ACTUAL -> %s en posicion: %d\n", pila[(*tope)], *tope);
+
+	(*tope)++;
+	//printf("\tNUEVO TOPE PILA: %d\n", *tope);
+}
+
+int pilaVacia(int tope)
+{
+	if (tope - 1 == -1)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int pilaLlena(int tope)
+{
+	if (tope - 1 == 100 - 1)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int topeDePila(char *pila[], int *tope)
+{
+	if (pilaVacia((*tope)) == 0)
+	{
+		char *dato = pila[(*tope) - 1];
+
+		printf("\tTOPE DE PILA :: #CELDA -> %s de posicion : %d \n", dato, *tope);
+
+		return atoi(dato);
+	}
+	else
+	{
+		printf("Error: La pila esta vacia.\n");
+		system("Pause");
+		exit(1);
+	}
+}
+
+int buscarDatoDePila(char *pila[], int *tope, char *dato)
+{
+	int existeEnPila = 0, x;
+
+	if (pilaVacia((*tope)) == 0)
+	{
+		for (x = 0; x < (*tope); x++)
+		{
+			if (strcmp(pila[x], dato) == 0)
+			{
+				existeEnPila = 1;
+			}
+		}
+	}
+	return existeEnPila;
 }

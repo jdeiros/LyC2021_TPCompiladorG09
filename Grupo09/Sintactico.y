@@ -39,11 +39,20 @@
 		equmin_enum = 1
 	} enum_equmax_equmin;
 
+	//Variables para declaraciones
+	char* pila_declaraciones[30];
+	int tope_pila_declaraciones = 0;
+
+	//variables globales
+	int tipoDatoVarA, tipoDatoVarB, esOperacionMOD=0;
+	
 	int EQind = -1;	//indice para equmax_equmin
 	int Xind = -1; 	//indice para Salto en equmax_equmin
 	int Eind = -1; 	//indice para Expresion
 	int Find = -1; 	//indice para Factor
 	int Tind = -1; 	//indice para Termino
+
+	// int contador_tiempos_debug = 0;
 %}
 
 %union{
@@ -112,27 +121,52 @@ programa: {printf("INICIO PROGRAMA\n");}
 	sentencias {printf("FIN SENTENCIAS\n"); }
 
 declaracion_var: 
-	DIM {printf("DIM ");} 
-	CMP_MENOR {printf(" < ");}
+	DIM 
+	CMP_MENOR 
 	lista_declaracion_var
-	CMP_MAYOR {printf(" > ");}
-	AS {printf("AS\n");}
-	CMP_MENOR {printf(" < ");}
+	CMP_MAYOR 
+	AS
+	CMP_MENOR 
 	lista_declaracion_tipos 
-	CMP_MAYOR {printf(" > ");}
+	CMP_MAYOR
 
 lista_declaracion_var:
-	lista_declaracion_var CAR_COMA ID {printf(" id ");} |
-	ID {printf(" id1 ");}
+	lista_declaracion_var CAR_COMA ID {
+		if(buscarDatoDePila(pila_declaraciones, &tope_pila_declaraciones, $<stringValue>3)) {
+			printf("Error :: Variable %s ya declarada.\n", yylval.stringValue);
+			system("pause");
+			exit(1);
+		} else {
+			apilar(yylval.stringValue, pila_declaraciones, &tope_pila_declaraciones);
+		}
+	} |
+	ID {	
+			if(buscarDatoDePila(pila_declaraciones, &tope_pila_declaraciones, yylval.stringValue)) {
+				printf("Error :: Variable %s ya declarada.\n", yylval.stringValue);
+				system("pause");
+				exit(1);
+			} else {
+				apilar(yylval.stringValue, pila_declaraciones, &tope_pila_declaraciones);
+			}
+	}
 
 lista_declaracion_tipos:
 	lista_declaracion_tipos CAR_COMA declaracion_tipo |
 	declaracion_tipo
 
 declaracion_tipo:
-	INT 		{actualizarTipoDato(T_INT); printf("integer ");}|
-	FLOAT 		{actualizarTipoDato(T_FLOAT); printf("real ");}|
-	STRING 		{actualizarTipoDato(T_STRING); printf("STRING ");}
+	INT 		{
+		actualizarTipoDato(T_INT); 
+		// printf("[%d] debug: declaracion de tipos\n", contador_tiempos_debug++);
+	}|
+	FLOAT 		{
+		actualizarTipoDato(T_FLOAT); 
+		// printf("[%d] debug: declaracion de tipos\n", contador_tiempos_debug++);
+	}|
+	STRING 		{
+		actualizarTipoDato(T_STRING); 
+		// printf("[%d] debug: declaracion de tipos\n", contador_tiempos_debug++);
+	}
 
 sentencias:
 	sentencias operacion {printf("FIN OPERACION \n"); }
@@ -420,33 +454,57 @@ operador:
 	CMP_MAYORIGUAL 	{$<intValue>$ = string_from_cte(CTE_CMP_MAYOR_IGUAL);}
 
 asignacion:	
-	ID OP_ASIG expresion {$<stringValue>$ = str_terceto_number(crear_terceto(":=", $<stringValue>1,  $<stringValue>3)); }
+	ID OP_ASIG expresion {
+		verificarExisteId($<stringValue>1);
+		tipoDatoVarA = obtenerTipoDato($<stringValue>1);
+		tipoDatoVarB = obtenerTipoDatoTerceto($<stringValue>3);
+		validarTipoDato(tipoDatoVarA,tipoDatoVarB,yylineno, 0);
+		// printf("[%d] debug: asignaciones (ID := expresion)\n", contador_tiempos_debug++);
+		$<stringValue>$ = str_terceto_number(crear_terceto(":=", $<stringValue>1,  $<stringValue>3)); 
+	}
 
 expresion:
 	expresion OP_RES termino 	 {
 									Eind = crear_terceto("-", $<stringValue>1, $<stringValue>3); 
-									$<stringValue>$ = str_terceto_number(Eind); 
+									$<stringValue>$ = str_terceto_number(Eind);
+									// printf("[%d] debug: expresion - termino\n", contador_tiempos_debug++);
 								}|
 	expresion OP_SUM termino 	 {
 									Eind = crear_terceto("+", $<stringValue>1, $<stringValue>3);
-									$<stringValue>$ = str_terceto_number(Eind); 
+									$<stringValue>$ = str_terceto_number(Eind);
+									// printf("[%d] debug: expresion + termino\n", contador_tiempos_debug++);
 								}|
-	termino 					{	Eind = terceto_number($<stringValue>1);}
+	termino 					{	
+									Eind = terceto_number($<stringValue>1);
+									// printf("[%d] debug: termino\n", contador_tiempos_debug++);
+								}
 
 termino:
 	termino OP_MUL factor 	{ 
 								Tind = crear_terceto("*", $<stringValue>1, $<stringValue>3); 
 								$<stringValue>$ = str_terceto_number(Tind); 
+								// printf("[%d] debug: termino * factor\n", contador_tiempos_debug++);
 							}|	
 	termino OP_DIV factor 	{ 
 								Tind = crear_terceto("/", $<stringValue>1, $<stringValue>3); 
 								$<stringValue>$ = str_terceto_number(Tind); 
+								// printf("[%d] debug: termino / factor\n", contador_tiempos_debug++);
 							}|
-	factor
+	factor {
+		// printf("[%d] debug: factor\n", contador_tiempos_debug++);
+	}
 
 factor:
-	ID 		  		| 
-	constante 
+	ID 		  {
+		Find = crear_terceto($<stringValue>1, NULL, NULL);
+		$<stringValue>$ = str_terceto_number(Find); 
+		// printf("[%d] debug: ID\n", contador_tiempos_debug++);
+	}| 
+	constante {
+		Find = crear_terceto($<stringValue>1, NULL, NULL);
+		$<stringValue>$ = str_terceto_number(Find); 
+		// printf("[%d] debug: constante\n", contador_tiempos_debug++);
+	}
 
 constante:
 	CONST_INT	|
@@ -490,7 +548,6 @@ int main(int argc,char *argv[])
         escribir_tercetos(intermedia);
 		printf("Mostrando tercetos guardados: \n");
         escribir_tercetos(stdout);
-		mostrarTablaSimbolos();
     }
 	// libero memoria de tercetos
     limpiar_tercetos();

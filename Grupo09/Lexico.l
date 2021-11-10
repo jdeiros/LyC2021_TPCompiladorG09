@@ -82,7 +82,6 @@ string|STRING			{ return STRING; }
 								printf( "El entero ingresado supera la cantidad maxima permitida. Cantidad: %d\n", COTA_INT);
 								exit(1);
 							}
-							//insertarTokenEnTS("CONST_INT", strdup(yytext), 0, yytext);
 							insertarTablaSimbolos(indicarNombreConstante(strdup(yytext)), T_CTE_INTEGER, strdup(yytext), 0);
 							yylval.intValue = strdup(yytext); 
 							printf( "Entero en lexico: %d\n", yylval.intValue); 

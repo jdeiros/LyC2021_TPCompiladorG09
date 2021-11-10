@@ -23,7 +23,6 @@ typedef struct
 	int longitud;
 } t_simbolo;
 
-
 /*** SECCION FUNCIONES TABLA DE SIMBOLOS ***/
 int tsCrearArchivo();
 void insertarTablaSimbolos(char *, int, char *, int);
@@ -41,6 +40,7 @@ int obtenerTipoDato(char *);
 void verificarExisteId(char *);
 void validarTipoDato(int, int, int, int);
 int obtenerTipoDatoOperacion(int, int);
+int obtenerTipoDatoTerceto(char *);
 
 /*** SECCION UTILITARIOS ***/
 void validarDivisionPorCero(char *);
@@ -53,6 +53,7 @@ typedef struct s_terceto
 		t2[COTA_STR],	// segundo termino
 		t3[COTA_STR];	// tercer termino
 	char aux[COTA_STR]; // nombre variable auxiliar correspondiente
+	int tipo;
 } t_terceto;
 /* coleccion de tercetos */
 t_terceto *tercetos[MAX_TERCETOS];
@@ -63,7 +64,7 @@ t_terceto *_crear_terceto(const char *, const char *, const char *);
 /* crea un terceto y lo agrega a la coleccion */
 int crear_terceto(const char *, const char *, const char *);
 /* crea un terceto y lo agrega a la coleccion y devuelve string con formato [n]*/
-char * str_terceto_number(int);
+char *str_terceto_number(int);
 /* escribe los tercetos en un archivo */
 void escribir_tercetos(FILE *);
 /* libera memoria pedida para tercetos */
@@ -74,14 +75,15 @@ int terceto_number(char *);
 FILE *intermedia;
 /* flag error de sintaxis */
 int sintaxis_error;
-char * get_from_TS();
+char *get_from_TS();
 
-/* Pila para manejo de tercetos */ 
-typedef struct s_nodo {
-    int valor;
-    struct s_nodo *sig;
+/* Pila para manejo de tercetos */
+typedef struct s_nodo
+{
+	int valor;
+	struct s_nodo *sig;
 } t_nodo;
-typedef t_nodo* t_pila;
+typedef t_nodo *t_pila;
 /* apunta al ultimo elemento ingresado */
 t_pila pila;
 /* Indica que operador de comparacion se uso */
@@ -89,15 +91,25 @@ t_pila comparacion;
 /* Apila los tipos de condicion (and, or, not) cuando hay anidamiento */
 t_pila pila_condicion;
 /** inserta un entero en la pila */
-void insertar_pila (t_pila*, int);
+void insertar_pila(t_pila *, int);
 /** obtiene un entero de la pila */
-int sacar_pila(t_pila*);
+int sacar_pila(t_pila *);
 /** crea una estructura de pila */
-void crear_pila(t_pila*);
+void crear_pila(t_pila *);
 /** destruye pila */
-void destruir_pila(t_pila*);
+void destruir_pila(t_pila *);
 
-char * string_from_cte(int cte);
+char *string_from_cte(int cte);
 
 /** Obtiene nombre o valor del elemento en posicion i en la tabla de simbolos */
-void obtener_nombre_o_valor(char* lex, char* destino);
+void obtener_nombre_o_valor(char *lex, char *destino);
+
+//declaraciones de funciones de pila
+int desapilar(char *[], int *tope);
+char *desapilarChar(char *[], int *tope);
+void apilar(char *dato, char *pila[], int *tope);
+int pilaVacia(int tope);
+int pilaLlena(int tope);
+void recorrerPila(char *pila[], int *tope);
+int topeDePila(char *[], int *tope);
+int buscarDatoDePila(char *[], int *tope, char *dato);
