@@ -4,7 +4,7 @@ bison -dyv Sintactico.y
 pause
 gcc.exe funciones.c lex.yy.c y.tab.c -o Primera.exe
 pause
-Primera.exe ../TestFiles/prueba_asignaciones.txt
+Primera.exe ../TestFiles/prueba_valida_comparacion.txt
 del lex.yy.c
 del y.tab.c
 del y.output
