@@ -430,6 +430,12 @@ condiciones:
 
 condicion:
 	expresion operador expresion {
+		tipoDatoVarA = obtenerTipoDatoTerceto($<stringValue>1);
+		tipoDatoVarB = obtenerTipoDatoTerceto($<stringValue>3);		
+		// printf("debug: validando tipo dato en condicion. tipo de %s: %d, tipo de %s: %d\n", $<stringValue>1, tipoDatoVarA, $<stringValue>3, tipoDatoVarB);
+		// mostrarTablaSimbolos();
+		validarTipoDato(tipoDatoVarA,tipoDatoVarB,yylineno, 1);
+
 		/* aviso que operacion hay que hacer */
         insertar_pila(&comparacion, atoi($<intValue>2));
         $<stringValue>$ = str_terceto_number(crear_terceto("CMP", $<stringValue>1, $<stringValue>3)); 
@@ -456,6 +462,9 @@ operador:
 asignacion:	
 	ID OP_ASIG expresion {
 		verificarExisteId($<stringValue>1);
+		
+		// printf("debug: verificar existe id %s\n", $<stringValue>2);
+
 		tipoDatoVarA = obtenerTipoDato($<stringValue>1);
 		tipoDatoVarB = obtenerTipoDatoTerceto($<stringValue>3);
 		validarTipoDato(tipoDatoVarA,tipoDatoVarB,yylineno, 0);
@@ -514,12 +523,19 @@ constante:
 entrada_salida:
 	GET ID {
 		verificarExisteId($<stringValue>2);
+
+		// printf("debug: verificar existe id %s\n", $<stringValue>2);
+
 		char valor[COTA_STR];
 		obtener_nombre_o_valor($<stringValue>2, valor);
 		$<stringValue>$ = str_terceto_number(crear_terceto ("GET", valor, NULL));
 	} |
 	DISPLAY ID {
 		char valor[COTA_STR];
+		verificarExisteId($<stringValue>2);
+
+		// printf("debug: verificar existe id %s\n", $<stringValue>2);
+		
 		obtener_nombre_o_valor($<stringValue>2, valor);
 		$<stringValue>$ = str_terceto_number(crear_terceto ("DISPLAY", valor, NULL));
 	} |
