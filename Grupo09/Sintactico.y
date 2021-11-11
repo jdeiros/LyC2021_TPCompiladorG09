@@ -694,7 +694,7 @@ void generarDatos() {
 }
 
 void generarCodigo() {
-	
+	// TODO: leer el archivo de tercetos y generar el codigo assembler
 }
 
 int informeError(char * error){
