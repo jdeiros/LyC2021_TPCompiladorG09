@@ -1,37 +1,42 @@
 */ZONA DE DECLARACION DE VARIABLES/*
-DIM <A,B,C,D,E, var1> AS <integer, real, string, integer, real, integer>
+DIM <A,B,C,D,E, var1, s3> AS <integer, real, string, integer, real, integer, string>
 
 A := 5
-B := 10
-C := 15
-W := 1.40
+B := 10.3
+C := "hola"
 
-FOR A := B+C TO D NEXT A
+FOR A := B+C TO D
+	DISPLAY "FOR"
+NEXT A
 
 */ asigno valores iniciales /*
 var1 := 120
 
-EQUMAX( 10 + 101; [100, 111, var1] )
+if(EQUMAX( 10 + 101; [100, 111, var1] )) then {
+	DISPLAY "EQUMAX"
+}
 
-EQUMIN( 10 + 101; [100, 111, var1] )
+if(EQUMIN( 10 + 101; [100, 111, var1] )) then {
+	DISPLAY "EQUMIN"
+}
 
-WHILE(E > B && E==C)
+WHILE(E > B && A==D)
 {
-    E:= E * 1
+    E:= 1.3
 }
 
 IF(A == 4)
 THEN
 {
  	D:=5
-	IF(B > 8 || G == 9)
+	IF(B > 8.3 || A == 9)
 	THEN
 	{
 		D:=3
 		C:="IF anidado"
 		DISPLAY "condicion compuesta"
 	}
-	G:="IF exterior"
+	C:="IF exterior"
 }
 ELSE
 {
@@ -40,8 +45,8 @@ ELSE
 }
 
 
-G:= "HOLA"
-C:="HOLA TODO BIEN"
+C := "HOLA"
+s3 :="HOLA TODO BIEN"
 
 DISPLAY "Mostrar por pantalla"
 GET C
