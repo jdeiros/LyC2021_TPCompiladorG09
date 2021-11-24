@@ -53,6 +53,36 @@
 	int Tind = -1; 	//indice para Termino
 
 	// int contador_tiempos_debug = 0;
+
+	/*  codigo assembler */
+	FILE *pfASM; //Final.asm
+	typedef struct s_elemento {
+	    char* nombre;
+		char* tipo;
+	    char* valor;
+	}t_elemento;
+
+	typedef struct {
+	    char nombre[100];
+		char tipo[100];
+	    char valor[100];
+	    char longitud[100];
+	}t_lineaTs;
+
+	//funciones assembler
+	void generarASM();
+	void generarEncabezado();
+	void generarDatos();
+	void generarCodigo();
+	int informeError(char *);
+	char* obtenerTipoTS(char*);
+
+	char* pila_operandos[100];
+	int tope_pila_operando = 0;
+
+	#define TAM_PILA 100
+	#define STR_VALUE 1024
+
 %}
 
 %union{
@@ -118,7 +148,11 @@
 %%
 programa: {printf("INICIO PROGRAMA\n");}
 	declaracion_var {printf("INICIO SENTENCIAS\n");} 
-	sentencias {printf("FIN SENTENCIAS\n"); }
+	sentencias {
+		generarASM();
+		printf("Fin del parsing!\n");
+		printf("FIN SENTENCIAS\n"); 
+	}
 
 declaracion_var: 
 	DIM 
@@ -576,3 +610,137 @@ int yyerror() {
 	sintaxis_error = 1;
 	exit(1);
 }
+
+//funciones assembler
+void generarASM() {
+    //Abrir archivo Final.asm
+    if(!(pfASM = fopen("Final.asm", "wt+"))) {
+        informeError("Error al crear el archivo Final.asm, verifique los permisos de escritura.");
+    }
+  
+    //Generar archivo ASM
+    fprintf(pfASM, ";\n;ARCHIVO FINAL.ASM\n;\n");
+
+    generarEncabezado();
+    generarDatos();
+	// cargarVectorEtiquetas();
+    generarCodigo();
+ 	//    generarFin();
+	
+    //Cerrar archivo
+    fclose(pfASM);
+}
+
+
+void generarEncabezado() {
+    //Encabezado del archivo
+    fprintf(pfASM, "\nINCLUDE macros2.asm\t\t ;incluye macros\n");
+    fprintf(pfASM, "INCLUDE number.asm\t\t ;incluye el asm para impresion de numeros\n");
+    //fprintf(pfASM, "INCLUDE string.asm\t\t ;incluye el asm para manejo de strings\n");    		 
+    fprintf(pfASM, "\n.MODEL LARGE ; tipo del modelo de memoria usado.\n");
+    fprintf(pfASM, ".386\n");
+    fprintf(pfASM, ".STACK 200h ; bytes en el stack\n"); 
+}
+
+void generarDatos() {
+	FILE *pfTS;
+	int nro_linea=1;
+    char linea[95];
+    int i = 0;
+    int j=0;
+    char aux[STR_VALUE];
+	char* token; // para el split de linea
+	t_lineaTs lineaTs;
+	
+    //Encabezado del sector de datos
+    fprintf(pfASM, "\t\n.DATA ; comienzo de la zona de datos.\n");    
+    fprintf(pfASM, "\tTRUE equ 1\n");
+    fprintf(pfASM, "\tFALSE equ 0\n");
+    fprintf(pfASM, "\tMAXTEXTSIZE equ %d\n",200); //cota STR
+    fprintf(pfASM, "\t%-32s\tdd\t%s\n", "R1", "?");	
+	int cant_aux = 1;
+	while(cant_aux<=15){
+		fprintf(pfASM, "\t%s%-30d\tdd\t%s\n", "@aux", cant_aux,"?");
+		cant_aux++;
+	}   
+	
+	if(!(pfTS = fopen("ts.txt", "r+"))) {
+         informeError("Error al abrir el archivo ts.txt, verifique los permisos de escritura.");
+    }
+	
+	while( fscanf(pfTS,"%[^|]|%[^|]|%[^|]|%[^|]|\n",lineaTs.nombre,lineaTs.tipo,lineaTs.valor,lineaTs.longitud) == 4) {
+    	if(i>=2){
+    		j=0;
+    		
+    		for ( j = strlen(lineaTs.nombre) - 1; lineaTs.nombre[j] == ' ' ; j-- );
+				lineaTs.nombre[j+1]='\0';
+			for ( j = strlen(lineaTs.tipo) - 1; lineaTs.tipo[j] == ' ' ; j-- );
+				lineaTs.tipo[j+1]='\0';
+			for ( j = strlen(lineaTs.valor) - 1; lineaTs.valor[j] == ' ' ; j-- );
+				lineaTs.valor[j+1]='\0';
+			
+	      
+				if(strcmp(lineaTs.tipo,"INT")==0 || strcmp(lineaTs.tipo,"FLOAT")==0 || strcmp(lineaTs.tipo,"STRING")==0){
+					fprintf(pfASM, "\t%-32s\tdd\t%s\n",lineaTs.nombre,"?"); 
+				}else if(strcmp(lineaTs.tipo,"CTE_INT")==0 || strcmp(lineaTs.tipo,"CTE_FLOAT")==0)
+					fprintf(pfASM, "\t%-32s\tdd\t%s\n",lineaTs.nombre,lineaTs.valor);
+
+				if(strcmp(lineaTs.tipo,"CTE_STRING")==0)
+					fprintf(pfASM, "\t%-32s\tdb\t%s ,'$',%s dup (?)\n",lineaTs.nombre,lineaTs.valor,lineaTs.longitud);
+	    }
+	    i++;
+	}
+	fclose(pfTS);	
+}
+
+void generarCodigo() {
+	// TODO: leer el archivo de tercetos y generar el codigo assembler
+}
+
+int informeError(char * error){
+		printf("\n%s",error);
+		getchar();
+		exit(1);
+}
+
+
+char* obtenerTipoTS(char* nombre_elemento){
+ 	FILE *pfTS;
+ 	char* aux;
+ 	char linea[100];
+ 	int encontro = 0;
+ 	t_lineaTs lineaTs;
+ 	int j, i=0;
+	
+ 	if(!(pfTS = fopen("ts.txt", "r+"))) {
+          informeError("Error al abrir el archivo ts.txt, verifique los permisos de escritura.");
+     }
+	
+ 	while(fscanf(pfTS,"%[^|]|%[^|]|%[^|]|%[^|]|\n",lineaTs.nombre,lineaTs.tipo,lineaTs.valor,lineaTs.longitud) == 4) {
+ 		if(i>=2){
+    		j=0;
+    		
+    		for ( j = strlen(lineaTs.nombre) - 1; lineaTs.nombre[j] == ' ' ; j-- );
+				lineaTs.nombre[j+1]='\0';
+			for ( j = strlen(lineaTs.tipo) - 1; lineaTs.tipo[j] == ' ' ; j-- );
+				lineaTs.tipo[j+1]='\0';
+			for ( j = strlen(lineaTs.valor) - 1; lineaTs.valor[j] == ' ' ; j-- );
+				lineaTs.valor[j+1]='\0';
+			
+
+			if(strcmp(lineaTs.nombre,nombre_elemento)==0) {
+				aux = (char *) malloc(sizeof(char) * (strlen(lineaTs.tipo) + 1));
+				strcpy(aux, lineaTs.tipo);
+
+				encontro = 1;
+				fclose(pfTS);
+				return aux;
+			}
+		}
+	    i++;
+     }
+	
+	
+ 	fclose(pfTS);
+ 	return "NADA";
+ }
