@@ -9,7 +9,7 @@ INCLUDE number.asm		 ;incluye el asm para impresion de numeros
 .386
 .STACK 200h ; bytes en el stack
 	
-.DATA ; comienzo de la zona de datos.
+.DATA ;variables de la tabla de simbolos.
 	TRUE equ 1
 	FALSE equ 0
 	MAXTEXTSIZE equ 200

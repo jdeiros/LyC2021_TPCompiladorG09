@@ -83,6 +83,7 @@
 	#define TAM_PILA 100
 	#define STR_VALUE 1024
 
+	// char etiqueta[COTA_STR];
 %}
 
 %union{
@@ -250,17 +251,26 @@ operacion_if:
 					   printf("destino segunda condicion: %s\n", destino);
 
 					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+					   
+					//    sprintf(etiqueta, "saltoDeIF_%d", terceto_number(destino));
+					//    crear_terceto(etiqueta,NULL,NULL);
 				   } 
 				   else
 				   { 
 					   	/* Si es NOT, produce el salto cuando se cumple la condicion */
 				   		if (tipo_condicion==COND_NOT){					   		
 					   		tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+
+							// sprintf(etiqueta, "saltoDeIF_%d", terceto_number(destino));
+							// crear_terceto(etiqueta,NULL,NULL);
 				   		} 
 						else 
 						{
 					   		segunda_condicion = terceto_condicion;
 					   		tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], condicion, destino);
+
+							// sprintf(etiqueta, "saltoDeIF_%d", terceto_number(destino));
+							// crear_terceto(etiqueta,NULL,NULL);
 				   		}
 				   }
 			   }
@@ -653,7 +663,7 @@ void generarDatos() {
 	t_lineaTs lineaTs;
 	
     //Encabezado del sector de datos
-    fprintf(pfASM, "\t\n.DATA ; comienzo de la zona de datos.\n");    
+    fprintf(pfASM, "\t\n.DATA ;variables de la tabla de simbolos.\n");    
     fprintf(pfASM, "\tTRUE equ 1\n");
     fprintf(pfASM, "\tFALSE equ 0\n");
     fprintf(pfASM, "\tMAXTEXTSIZE equ %d\n",200); //cota STR
