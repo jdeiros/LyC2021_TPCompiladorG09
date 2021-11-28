@@ -115,7 +115,7 @@ int topeDePila(char *[], int *tope);
 int buscarDatoDePila(char *[], int *tope, char *dato);
 
 //assembler
-void resolver_asignacion(FILE* arch, int terceto);
+void resolver_asignacion(FILE* arch, int terceto, int *countAssemblerAux);
 char *get_type(int const_type);
 void resolver_comparacion(FILE* arch,int terceto);
 

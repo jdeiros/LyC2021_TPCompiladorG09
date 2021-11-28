@@ -563,7 +563,7 @@ int buscarDatoDePila(char *pila[], int *tope, char *dato)
 
 //************************************************** assembler **************************************************
 
-void resolver_asignacion(FILE* arch, int ind){
+void resolver_asignacion(FILE* arch, int ind, int *countAssemblerAux){
 	/**************************************************/
 	char op1[30];
     char op2[30];
@@ -574,37 +574,54 @@ void resolver_asignacion(FILE* arch, int ind){
 	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
 	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
 
-	/*
-	if(strcmp(op1, "+")==0 || strcmp(op1, "-")==0 || strcmp(op1, "/")==0 || strcmp(op1, "-")==0 || strcmp(op1, "*")==0){
-		//resolver
-	}
-	else{
-		//aca el codigo
-	}
-
-	if(strcmp(op2, "+")==0 || strcmp(op2, "-")==0 || strcmp(op2, "/")==0 || strcmp(op2, "-")==0 || strcmp(op2, "*")==0){
-		//resolver
-	}
-	else{
-		//aca el codigo
-	}
-	*/
-
-	if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (tipoDatoOp2==T_INT || tipoDatoOp2==T_CTE_INTEGER))
+	if(strcmp(op1, "+")!=0 && strcmp(op1, "-")!=0 && strcmp(op1, "/")!=0  && strcmp(op1, "-")!=0 && strcmp(op1, "*")!=0 
+		&& strcmp(op2, "+")!=0 && strcmp(op2, "-")!=0 && strcmp(op2, "/")!=0  && strcmp(op2, "-")!=0 && strcmp(op2, "*")!=0)
 	{
-		fprintf(arch, "\tfild %s\n", op2);
-		fprintf(arch, "\tfistp %s\n",op1);
-	} else if (tipoDatoOp2==T_STRING || tipoDatoOp2 == T_CTE_STRING)
-	{
-		fprintf(arch, "\tmov si, OFFSET %s\n", op2);
-		fprintf(arch, "\tmov di, OFFSET %s\n", op1);
-		fprintf(arch, "\tSTRCPY\n");
-	} else {
-		fprintf(arch, "\tfld %s\n", op2);
-		fprintf(arch, "\tfstp %s\n", op1);
+		/***************************************************/
+		if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (tipoDatoOp2==T_INT || tipoDatoOp2==T_CTE_INTEGER))
+		{
+			fprintf(arch, "\tfild %s\n", op2);
+			fprintf(arch, "\tfistp %s\n",op1);
+		} else if (tipoDatoOp2==T_STRING || tipoDatoOp2 == T_CTE_STRING)
+		{
+			fprintf(arch, "\tmov si, OFFSET %s\n", op2);
+			fprintf(arch, "\tmov di, OFFSET %s\n", op1);
+			fprintf(arch, "\tSTRCPY\n");
+		} else {
+			fprintf(arch, "\tfld %s\n", op2);
+			fprintf(arch, "\tfstp %s\n", op1);
+		}
+		/***************************************************/
+	}
+	else {
+		//op1
+		if(strcmp(op1, "+")==0){
+			resolver_suma(arch, nroTercetoOp1, countAssemblerAux);
+		}
+		if(strcmp(op1, "-")==0){
+			resolver_resta(arch, nroTercetoOp1, countAssemblerAux);		
+		}
+		if(strcmp(op1, "/")==0){
+			resolver_division(arch, nroTercetoOp1, countAssemblerAux);	
+		}
+		if(strcmp(op1, "*")==0){
+			resolver_multiplicacion(arch, nroTercetoOp1, countAssemblerAux);				
+		}
+		//op2
+		if(strcmp(op2, "+")==0){
+			resolver_suma(arch, nroTercetoOp2, countAssemblerAux);
+		}
+		if(strcmp(op2, "-")==0){
+			resolver_resta(arch, nroTercetoOp2, countAssemblerAux);		
+		}
+		if(strcmp(op2, "/")==0){
+			resolver_division(arch, nroTercetoOp2, countAssemblerAux);	
+		}
+		if(strcmp(op2, "*")==0){
+			resolver_multiplicacion(arch, nroTercetoOp2, countAssemblerAux);				
+		}
 	}
 
-	/***************************************************/
 }
 
 
@@ -722,7 +739,7 @@ void resolver_multiplicacion(FILE* arch, int ind, int *countAssemblerAux){
 		fprintf(arch, "\tfmul\n");
 
 		fprintf(arch, "\tfistp %s\n",auxAssembler);
-		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_INT);
+		
 	} else {
 		fprintf(arch, "\tfld %s\n", op1);
 		fprintf(arch, "\tfld %s\n", op2);
@@ -730,10 +747,10 @@ void resolver_multiplicacion(FILE* arch, int ind, int *countAssemblerAux){
 		fprintf(arch, "\tfmul\n");
 
 		fprintf(arch, "\tfstp %s\n",auxAssembler);
-		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_FLOAT);
+		
 	}
 
-	// apilar(auxAssembler,pila_operandos,&tope_pila_operando);
+	
 	(*countAssemblerAux)++;
 }
 void resolver_division(FILE* arch, int ind, int *countAssemblerAux){
@@ -757,7 +774,6 @@ void resolver_division(FILE* arch, int ind, int *countAssemblerAux){
 		fprintf(arch, "\tfdiv\n");
 		fprintf(arch, "\tfistp %s\n",auxAssembler);
 
-		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_INT);
 	} else {
 		fprintf(arch, "\tfld %s\n", op1);
 		fprintf(arch, "\tfld %s\n", op2);
@@ -765,10 +781,8 @@ void resolver_division(FILE* arch, int ind, int *countAssemblerAux){
 		fprintf(arch, "\tfdiv\n");
 		fprintf(arch, "\tfstp %s\n",auxAssembler);
 
-		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_FLOAT);
 	}
 
-	// apilar(auxAssembler,pila_operandos,&tope_pila_operando);
 	(*countAssemblerAux)++;
 }
 

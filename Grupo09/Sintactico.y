@@ -721,7 +721,7 @@ void generarCodigo() {
 		
 		/********************** asignacion y comparacion ***************************************************/
 		if(strcmp(tercetos[i]->t1, ":=")==0){
-			resolver_asignacion(pfASM, i);
+			resolver_asignacion(pfASM, i, &countAssemblerAux);
 			procesado=1;
 		}
 		if(strcmp(tercetos[i]->t1, "CMP")==0){

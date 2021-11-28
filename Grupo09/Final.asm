@@ -89,8 +89,11 @@ START:
 	fxch
 	fadd
 	fistp @aux1
-	fld +
-	fstp 5
+	fild 5
+	fild 5
+	fxch
+	fadd
+	fistp @aux2
 	fild 120
 	fistp 5
 	fild 100
