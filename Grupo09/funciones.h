@@ -113,3 +113,16 @@ int pilaLlena(int tope);
 void recorrerPila(char *pila[], int *tope);
 int topeDePila(char *[], int *tope);
 int buscarDatoDePila(char *[], int *tope, char *dato);
+
+//assembler
+void resolver_asignacion(FILE* arch, int terceto);
+char *get_type(int const_type);
+void resolver_comparacion(FILE* arch,int terceto);
+
+void resolver_suma(FILE* arch, int terceto, int *countAssemblerAux);
+void resolver_resta(FILE* arch, int terceto, int *countAssemblerAux);
+void resolver_multiplicacion(FILE* arch, int terceto, int *countAssemblerAux);
+void resolver_division(FILE* arch, int terceto, int *countAssemblerAux);
+
+void resolver_display(FILE* arch,int terceto);
+void resolver_get(FILE* arch,int terceto);

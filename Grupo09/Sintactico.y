@@ -704,7 +704,96 @@ void generarDatos() {
 }
 
 void generarCodigo() {
+	int i, procesado=0;
+	//para assembler
+	int countAssemblerAux=1;	
+
 	// TODO: leer el archivo de tercetos y generar el codigo assembler
+	fprintf(pfASM, "\n.CODE\n");
+	fprintf(pfASM, "START:\n");
+	fprintf(pfASM, "\tMOV AX,@DATA\n");
+	fprintf(pfASM, "\tMOV DS,AX\n");
+	fprintf(pfASM, "\tMOV es,ax\n\n");
+			
+	for(i=0; i < cant_tercetos; i++){
+		// printf("%d) leyendo terceto -> ",i);
+		// printf("(t1, t2, t3) = (%s, %s, %s)\n", tercetos[i]->t1,tercetos[i]->t2,tercetos[i]->t3);
+		
+		/********************** asignacion y comparacion ***************************************************/
+		if(strcmp(tercetos[i]->t1, ":=")==0){
+			resolver_asignacion(pfASM, i);
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "CMP")==0){
+			resolver_comparacion(pfASM, i);		
+			procesado=1;
+		}
+		/********************** fin asignacion y comparacion ***************************************************/
+		
+		/********************** saltos ***************************************************/
+		if(strcmp(tercetos[i]->t1, "BGT")==0){			
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "BGE")==0){			
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "BLT")==0){			
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "BLE")==0){			
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "BNE")==0){			
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "BEQ")==0){			
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "BI")==0){			
+			procesado=1;
+		}
+		/********************** fin saltos ***************************************************/
+		
+		/********************** etiquetas ***************************************************/
+		//TODO: agregar etiquetas en los ciclos y saltos por condicion (then, else, endif, while, endwhile, for...)
+
+		/********************** fin etiquetas ***************************************************/
+
+		/********************** operaciones ***************************************************/
+		if(strcmp(tercetos[i]->t1, "+")==0){
+			resolver_suma(pfASM, i, &countAssemblerAux);
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "-")==0){
+			resolver_resta(pfASM, i, &countAssemblerAux);		
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "/")==0){
+			resolver_division(pfASM, i, &countAssemblerAux);	
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "*")==0){
+			resolver_multiplicacion(pfASM, i, &countAssemblerAux);				
+			procesado=1;
+		}
+		/********************** fin operaciones ***************************************************/
+		
+		/********************** I/O ***************************************************/
+		if(strcmp(tercetos[i]->t1, "DISPLAY")==0){	
+			resolver_display(pfASM, i);		
+			procesado=1;
+		}
+		if(strcmp(tercetos[i]->t1, "GET")==0){
+			resolver_get(pfASM, i);
+			procesado=1;
+		}
+		/********************** fin I/O ***************************************************/
+		
+		procesado==1 ? procesado=0 : printf("Terceto con valor: [%d] (%s, ,): %s\n",i, tercetos[i]->t1,get_type(tercetos[i]->tipo));
+	}
+
+	//Fin de ejecución
+    fprintf(pfASM, "\nTERMINAR: ;Fin de ejecución.\n\tmov ax, 4C00h ; termina la ejecución.\n\tint 21h; syscall\n\nEND START;final del archivo."); 
 }
 
 int informeError(char * error){

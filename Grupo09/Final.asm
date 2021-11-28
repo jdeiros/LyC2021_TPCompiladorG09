@@ -41,8 +41,6 @@ INCLUDE number.asm		 ;incluye el asm para impresion de numeros
 	_hola                           	db	"hola" ,'$',6          dup (?)
 	_FOR                            	db	"FOR" ,'$',5          dup (?)
 	_120                            	dd	120
-	_10                             	dd	10
-	_101                            	dd	101
 	_100                            	dd	100
 	_111                            	dd	111
 	_EQUMAX                         	db	"EQUMAX" ,'$',8          dup (?)
@@ -59,3 +57,179 @@ INCLUDE number.asm		 ;incluye el asm para impresion de numeros
 	_HOLA                           	db	"HOLA" ,'$',6          dup (?)
 	_HOLA_TODO_BIEN                 	db	"HOLA TODO BIEN" ,'$',16         dup (?)
 	_Mostrar_por_pantalla           	db	"Mostrar por pantalla" ,'$',22         dup (?)
+
+.CODE
+START:
+	MOV AX,@DATA
+	MOV DS,AX
+	MOV es,ax
+
+	fild 5
+	fistp 5
+	fld 10.3
+	fstp 5
+	mov si, OFFSET "hola"
+	mov di, OFFSET 5
+	STRCPY
+	fld B
+	fstp 5
+	fild D
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	DisplayInteger  5
+	newline
+	fild 5
+	fild 5
+	fxch
+	fadd
+	fistp @aux1
+	fld +
+	fstp 5
+	fild 120
+	fistp 5
+	fild 100
+	fistp 5
+	fild var1
+	fistp 5
+	fild 111
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fild 5
+	fistp 5
+	fild 100
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fild 5
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	DisplayInteger  5
+	newline
+	fild 111
+	fistp 5
+	fild var1
+	fistp 5
+	fild 111
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fild 5
+	fistp 5
+	fild 100
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fild 5
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	DisplayInteger  5
+	newline
+	fld E
+	fld B
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fld A
+	fld D
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fld 1.3
+	fstp 5
+	fld A
+	fld 4
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fild 5
+	fistp 5
+	fld B
+	fld 8.3
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fld A
+	fld 9
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+	fild 3
+	fistp 5
+	mov si, OFFSET "IF anidado"
+	mov di, OFFSET 5
+	STRCPY
+	DisplayInteger  5
+	newline
+	mov si, OFFSET "IF exterior"
+	mov di, OFFSET 5
+	STRCPY
+	fild 4
+	fistp 5
+	DisplayInteger  5
+	newline
+	mov si, OFFSET "HOLA"
+	mov di, OFFSET 5
+	STRCPY
+	mov si, OFFSET "HOLA TODO BIEN"
+	mov di, OFFSET 5
+	STRCPY
+	DisplayInteger  5
+	newline
+	GetInteger  5
+	DisplayInteger  5
+	newline
+
+TERMINAR: ;Fin de ejecución.
+	mov ax, 4C00h ; termina la ejecución.
+	int 21h; syscall
+
+END START;final del archivo.

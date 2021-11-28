@@ -5,18 +5,18 @@ A := 5
 B := 10.3
 C := "hola"
 
-FOR A := B+C TO D
+FOR A := B TO D
 	DISPLAY "FOR"
 NEXT A
 
 */ asigno valores iniciales /*
 var1 := 120
 
-if(EQUMAX( 10 + 101; [100, 111, var1] )) then {
+if(EQUMAX( 100; [100, 111, var1] )) then {
 	DISPLAY "EQUMAX"
 }
 
-if(EQUMIN( 10 + 101; [100, 111, var1] )) then {
+if(EQUMIN( 111; [100, 111, var1] )) then {
 	DISPLAY "EQUMIN"
 }
 

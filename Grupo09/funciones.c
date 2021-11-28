@@ -558,3 +558,246 @@ int buscarDatoDePila(char *pila[], int *tope, char *dato)
 	}
 	return existeEnPila;
 }
+
+
+
+//************************************************** assembler **************************************************
+
+void resolver_asignacion(FILE* arch, int ind){
+	/**************************************************/
+	char op1[30];
+    char op2[30];
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);
+	int nroTercetoOp2 = terceto_number(tercetos[ind]->t3);
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	int tipoDatoOp2 = tercetos[nroTercetoOp2]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
+
+	/*
+	if(strcmp(op1, "+")==0 || strcmp(op1, "-")==0 || strcmp(op1, "/")==0 || strcmp(op1, "-")==0 || strcmp(op1, "*")==0){
+		//resolver
+	}
+	else{
+		//aca el codigo
+	}
+
+	if(strcmp(op2, "+")==0 || strcmp(op2, "-")==0 || strcmp(op2, "/")==0 || strcmp(op2, "-")==0 || strcmp(op2, "*")==0){
+		//resolver
+	}
+	else{
+		//aca el codigo
+	}
+	*/
+
+	if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (tipoDatoOp2==T_INT || tipoDatoOp2==T_CTE_INTEGER))
+	{
+		fprintf(arch, "\tfild %s\n", op2);
+		fprintf(arch, "\tfistp %s\n",op1);
+	} else if (tipoDatoOp2==T_STRING || tipoDatoOp2 == T_CTE_STRING)
+	{
+		fprintf(arch, "\tmov si, OFFSET %s\n", op2);
+		fprintf(arch, "\tmov di, OFFSET %s\n", op1);
+		fprintf(arch, "\tSTRCPY\n");
+	} else {
+		fprintf(arch, "\tfld %s\n", op2);
+		fprintf(arch, "\tfstp %s\n", op1);
+	}
+
+	/***************************************************/
+}
+
+
+char *get_type(int const_type)
+{
+	switch(const_type)
+	{
+		case T_CTE_INTEGER: return "T_CTE_INTEGER";break;
+		case T_CTE_STRING: return "T_CTE_STRING";break;
+		case T_CTE_FLOAT: return "T_CTE_FLOAT";break;
+		case T_ID: return "T_ID";break;
+		case T_STRING: return "T_STRING";break;
+		case T_INT: return "T_INT";break;
+		case T_FLOAT: return "T_FLOAT";break;
+		case ERROR: return "ERROR";break;
+	}
+}
+
+void resolver_comparacion(FILE* arch, int ind)
+{
+	char op1[30];
+    char op2[30];
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);
+	int nroTercetoOp2 = terceto_number(tercetos[ind]->t3);
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	int tipoDatoOp2 = tercetos[nroTercetoOp2]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
+
+	fprintf(arch, "\tfld %s\n", op1);
+	fprintf(arch, "\tfld %s\n", op2);
+	fprintf(arch, "\tfxch\n");		
+	fprintf(arch, "\tfcomp\n");
+	fprintf(arch, "\tfstsw ax\n");
+	fprintf(arch, "\tffree st(0)\n");
+	fprintf(arch, "\tsahf\n");  
+}
+
+
+void resolver_suma(FILE* arch, int ind, int *countAssemblerAux){
+	char op1[30];
+    char op2[30];
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);
+	int nroTercetoOp2 = terceto_number(tercetos[ind]->t3);
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	int tipoDatoOp2 = tercetos[nroTercetoOp2]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
+	char auxAssembler[100];
+	sprintf(auxAssembler,"@aux%d", (*countAssemblerAux));
+
+	if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (tipoDatoOp2==T_INT || tipoDatoOp2==T_CTE_INTEGER))
+	{
+		fprintf(arch, "\tfild %s\n", op1);
+		fprintf(arch, "\tfild %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfadd\n");
+		fprintf(arch, "\tfistp %s\n",auxAssembler);
+	} else {
+		fprintf(arch, "\tfld %s\n", op1);
+		fprintf(arch, "\tfld %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfadd\n");
+		fprintf(arch, "\tfstp %s\n",auxAssembler);
+	}	
+	(*countAssemblerAux)++;
+}
+void resolver_resta(FILE* arch, int ind, int *countAssemblerAux){
+	char op1[30];
+    char op2[30];
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);
+	int nroTercetoOp2 = terceto_number(tercetos[ind]->t3);
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	int tipoDatoOp2 = tercetos[nroTercetoOp2]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
+	char auxAssembler[100];
+
+	sprintf(auxAssembler,"@aux%d", (*countAssemblerAux));
+
+	if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (tipoDatoOp2==T_INT || tipoDatoOp2==T_CTE_INTEGER))
+	{		
+		fprintf(arch, "\tfild %s\n", op1);
+		fprintf(arch, "\tfild %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfsub\n");
+		fprintf(arch, "\tfistp %s\n",auxAssembler);
+	} else {
+		fprintf(arch, "\tfld %s\n", op1);
+		fprintf(arch, "\tfld %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfsub\n");
+		fprintf(arch, "\tfstp %s\n",auxAssembler);
+	}
+	(*countAssemblerAux)++;
+}
+void resolver_multiplicacion(FILE* arch, int ind, int *countAssemblerAux){
+	char op1[30];
+    char op2[30];
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);
+	int nroTercetoOp2 = terceto_number(tercetos[ind]->t3);
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	int tipoDatoOp2 = tercetos[nroTercetoOp2]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
+	char auxAssembler[100];
+
+	sprintf(auxAssembler,"@aux%d", (*countAssemblerAux));
+
+	if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (tipoDatoOp2==T_INT || tipoDatoOp2==T_CTE_INTEGER))
+	{
+		fprintf(arch, "\tfild %s\n", op1);
+		fprintf(arch, "\tfild %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfmul\n");
+
+		fprintf(arch, "\tfistp %s\n",auxAssembler);
+		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_INT);
+	} else {
+		fprintf(arch, "\tfld %s\n", op1);
+		fprintf(arch, "\tfld %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfmul\n");
+
+		fprintf(arch, "\tfstp %s\n",auxAssembler);
+		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_FLOAT);
+	}
+
+	// apilar(auxAssembler,pila_operandos,&tope_pila_operando);
+	(*countAssemblerAux)++;
+}
+void resolver_division(FILE* arch, int ind, int *countAssemblerAux){
+	char op1[30];
+    char op2[30];
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);
+	int nroTercetoOp2 = terceto_number(tercetos[ind]->t3);
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	int tipoDatoOp2 = tercetos[nroTercetoOp2]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+	sprintf(op2, "%s", tercetos[nroTercetoOp2]->t1);
+	char auxAssembler[100];
+
+	sprintf(auxAssembler,"@aux%d", (*countAssemblerAux));
+
+	if ((tipoDatoOp1==T_INT || tipoDatoOp1==T_CTE_INTEGER) && (nroTercetoOp2==T_INT || nroTercetoOp2==T_CTE_INTEGER))
+	{
+		fprintf(arch, "\tfild %s\n", op1);
+		fprintf(arch, "\tfild %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfdiv\n");
+		fprintf(arch, "\tfistp %s\n",auxAssembler);
+
+		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_INT);
+	} else {
+		fprintf(arch, "\tfld %s\n", op1);
+		fprintf(arch, "\tfld %s\n", op2);
+		fprintf(arch, "\tfxch\n");
+		fprintf(arch, "\tfdiv\n");
+		fprintf(arch, "\tfstp %s\n",auxAssembler);
+
+		// insertarEnLista(listaSimbolos, auxAssembler, &puntero_simbolos, T_FLOAT);
+	}
+
+	// apilar(auxAssembler,pila_operandos,&tope_pila_operando);
+	(*countAssemblerAux)++;
+}
+
+void resolver_display(FILE* arch,int ind){
+	char op1[30];    
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);	
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;	
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);	
+
+	if ((tipoDatoOp1==T_STRING)||tipoDatoOp1==T_CTE_STRING) {
+		fprintf(arch, "\tdisplayString  %s\n", op1);
+	} else if ((tipoDatoOp1==T_INT)||tipoDatoOp1==T_CTE_INTEGER) {
+		fprintf(arch, "\tDisplayInteger  %s\n", op1);
+	} else if ((tipoDatoOp1==T_FLOAT)||tipoDatoOp1==T_CTE_FLOAT) {
+		fprintf(arch, "\tDisplayFloat  %s,2\n", op1);
+	}
+	fprintf(arch, "\tnewline\n");
+}
+void resolver_get(FILE* arch,int ind){
+	char op1[30];    
+	int nroTercetoOp1 = terceto_number(tercetos[ind]->t2);	
+	int tipoDatoOp1 = tercetos[nroTercetoOp1]->tipo;
+	sprintf(op1, "%s", tercetos[nroTercetoOp1]->t1);
+
+	if ((tipoDatoOp1==T_STRING)||tipoDatoOp1==T_CTE_STRING) {
+		fprintf(arch, "\tgetString  %s\n", op1);
+	} else if ((tipoDatoOp1==T_INT)||tipoDatoOp1==T_CTE_INTEGER) {
+		fprintf(arch, "\tGetInteger  %s\n", op1);
+	} else if ((tipoDatoOp1==T_FLOAT)||tipoDatoOp1==T_CTE_FLOAT) {
+		fprintf(arch, "\tGetFloat  %s\n", op1);
+	}
+}

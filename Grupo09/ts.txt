@@ -12,8 +12,6 @@ _10p3                            |CTE_FLOAT      |10.3                          
 _hola                            |CTE_STRING     |"hola"                          |6         |
 _FOR                             |CTE_STRING     |"FOR"                           |5         |
 _120                             |CTE_INT        |120                             |0         |
-_10                              |CTE_INT        |10                              |0         |
-_101                             |CTE_INT        |101                             |0         |
 _100                             |CTE_INT        |100                             |0         |
 _111                             |CTE_INT        |111                             |0         |
 _EQUMAX                          |CTE_STRING     |"EQUMAX"                        |8         |
