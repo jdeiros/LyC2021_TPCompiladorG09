@@ -337,8 +337,8 @@ void limpiar_tercetos()
 }
 int terceto_number(char *cadena)
 {
-	int i, longitud = strlen(cadena) - 2, inicio = 1;
-	char subcadena[strlen(cadena)];
+	int i, longitud = strlen(cadena) - 2, inicio = 1, long_subcadena;
+	char *subcadena = (char *)malloc(sizeof(strlen(cadena))); //[strlen(cadena)];
 
 	for (i = 0; i < longitud && inicio + i < strlen(cadena); i++)
 		subcadena[i] = cadena[inicio + i];

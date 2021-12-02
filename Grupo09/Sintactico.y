@@ -220,9 +220,9 @@ operacion:
 
 operacion_if:
 	IF CAR_PA condiciones CAR_PC then_ CAR_LA sentencias CAR_LC {
-               int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1;
+               int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1, fin_if;
 			   
-			   char condicion[7], destino[7];
+			   char condicion[7], destino[7], etiq[10];
 			   int tipo_condicion = sacar_pila (&pila_condicion);
 
 			   if ( tipo_condicion == COND_AND || tipo_condicion == COND_OR )
@@ -230,8 +230,10 @@ operacion_if:
 				   cant_condiciones = 2;
 			   }
 
-			   int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
-			   
+			   //int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
+			   sprintf(etiq, "FinIF_%d", cant_tercetos);
+			   fin_if = crear_terceto(etiq,NULL,NULL);
+
 			   /* Modifico los tercetos temporales de las condiciones */
 			   for (i=0; i < cant_condiciones; i++){
 				   iCmp = sacar_pila (&comparacion);
@@ -239,7 +241,7 @@ operacion_if:
 				   
 				   sprintf(condicion, "[%d]", terceto_condicion-1);
 				   printf("condicion: %s\n",condicion);
-				   
+
 				   sprintf(destino, "[%d]", fin_if);
 				   printf("destino: %s\n", destino);
 				   
@@ -250,7 +252,7 @@ operacion_if:
 					   sprintf(destino, "[%d]", segunda_condicion+1);
 					   printf("destino segunda condicion: %s\n", destino);
 
-					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
 					   
 					//    sprintf(etiqueta, "saltoDeIF_%d", terceto_number(destino));
 					//    crear_terceto(etiqueta,NULL,NULL);
@@ -259,7 +261,7 @@ operacion_if:
 				   { 
 					   	/* Si es NOT, produce el salto cuando se cumple la condicion */
 				   		if (tipo_condicion==COND_NOT){					   		
-					   		tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+					   		tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
 
 							// sprintf(etiqueta, "saltoDeIF_%d", terceto_number(destino));
 							// crear_terceto(etiqueta,NULL,NULL);
@@ -267,7 +269,7 @@ operacion_if:
 						else 
 						{
 					   		segunda_condicion = terceto_condicion;
-					   		tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], condicion, destino);
+					   		tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], destino, NULL);
 
 							// sprintf(etiqueta, "saltoDeIF_%d", terceto_number(destino));
 							// crear_terceto(etiqueta,NULL,NULL);
@@ -280,13 +282,18 @@ operacion_if:
 
 operacion_if:
 	IF CAR_PA condiciones CAR_PC then_ CAR_LA sentencias CAR_LC {
-               int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1;
-			   char condicion[7], destino[7];
+               int i, iCmp, terceto_condicion, segunda_condicion, cant_condiciones=1, fin_if;
+			   char condicion[7], destino[7],etiq[10];
+
 			   int tipo_condicion = sacar_pila (&pila_condicion);
 			   if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
 				   cant_condiciones = 2;
 			   } 
-			   int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
+			   
+			   //int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
+			   sprintf(etiq, "FinIF_%d", cant_tercetos);
+			   fin_if = crear_terceto(etiq,NULL,NULL);
+
 			   /* Modifico los tercetos temporales de las condiciones */
 			   for (i=0; i<cant_condiciones; i++){
 				   iCmp = sacar_pila (&comparacion);
@@ -303,13 +310,13 @@ operacion_if:
 					   sprintf(destino, "[%d]", segunda_condicion+1);
 					   printf("destino segunda condicion: %s\n", destino);
 
-					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
 				   } else if (tipo_condicion==COND_NOT){
 					   /* Si es NOT, produce el salto cuando se cumple la condicion */
-					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], condicion, destino);
+					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
 				   } else {
 					   segunda_condicion = terceto_condicion;
-					   tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], condicion, destino);
+					   tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], destino, NULL);
 				   }
 			   }
 			   //insertar_pila(&pila, crear_terceto("###", NULL, NULL)); /* guardo fin_then para el else */
@@ -356,13 +363,13 @@ iteracion_while:
 			/* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
 			if (tipo_condicion==COND_OR && i==1){
 				sprintf(destino, "[%d]", segunda_condicion+1);
-				tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp],condicion,destino);
+				tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp],destino, NULL);
 			} else if (tipo_condicion==COND_NOT){
 				/* Si es NOT, produce el salto cuando se cumple la condicion */
-				tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp],condicion,destino);
+				tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp],destino, NULL);
 			} else {
 				segunda_condicion = terceto_condicion;
-				tercetos[terceto_condicion] = _crear_terceto(salto[iCmp],condicion,destino);
+				tercetos[terceto_condicion] = _crear_terceto(salto[iCmp],destino, NULL);
 			}
 		}
 
@@ -426,14 +433,14 @@ lista_variables:
 				Xind = crear_terceto(":=", "@aux", $<stringValue>1);
 				EQind = crear_terceto("CMP", "@aux", "@min");				
 				sprintf(Xind4, "[%d]", Xind+4);
-				$<stringValue>$ = str_terceto_number(crear_terceto("BGE", str_terceto_number(EQind), Xind4));
+				$<stringValue>$ = str_terceto_number(crear_terceto("BGE", Xind4, NULL));
 				$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@min", "@aux"));
 				break;
 			case equmax_enum:
 				Xind = crear_terceto(":=", "@aux", $<stringValue>1);
 				EQind = crear_terceto("CMP", "@aux", "@max");
 				sprintf(Xind4, "[%d]", Xind+4);
-				$<stringValue>$ = str_terceto_number(crear_terceto("BLE", str_terceto_number(EQind), Xind4));
+				$<stringValue>$ = str_terceto_number(crear_terceto("BLE", Xind4, NULL));
 				$<stringValue>$ = str_terceto_number(crear_terceto(":=", "@max", "@aux"));
 				break;
 		}		
