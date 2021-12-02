@@ -1,9 +1,6 @@
 DIM <a, b, c> AS <integer, integer, integer>
 
-
-    if(a==b)then{
-        DISPLAY "estoy"
-        
-    }else{
-        DISPLAY "en else"
-    }
+if(a==b)then{
+    DISPLAY "estoy"
+    
+}
