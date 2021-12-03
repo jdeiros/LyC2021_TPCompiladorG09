@@ -232,7 +232,7 @@ operacion_if:
 
 			   //int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
 			   sprintf(etiq, "FinIF_%d", cant_tercetos);
-			   fin_if = crear_terceto(etiq,NULL,NULL);
+			   fin_if = crear_terceto("#ETIQUETA",etiq,NULL);
 
 			   /* Modifico los tercetos temporales de las condiciones */
 			   for (i=0; i < cant_condiciones; i++){
@@ -738,32 +738,43 @@ void generarCodigo() {
 		/********************** fin asignacion y comparacion ***************************************************/
 		
 		/********************** saltos ***************************************************/
-		if(strcmp(tercetos[i]->t1, "BGT")==0){			
+		if(strcmp(tercetos[i]->t1, "BGT")==0){
+			escribirSalto(pfASM, "JA", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
-		if(strcmp(tercetos[i]->t1, "BGE")==0){			
+		if(strcmp(tercetos[i]->t1, "BGE")==0){
+			escribirSalto(pfASM, "JAE", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
 		if(strcmp(tercetos[i]->t1, "BLT")==0){			
+			escribirSalto(pfASM, "JB", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
 		if(strcmp(tercetos[i]->t1, "BLE")==0){			
+			escribirSalto(pfASM, "JBE", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
-		if(strcmp(tercetos[i]->t1, "BNE")==0){			
+		if(strcmp(tercetos[i]->t1, "BNE")==0){	
+			escribirSalto(pfASM, "JNE", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
-		if(strcmp(tercetos[i]->t1, "BEQ")==0){			
+		if(strcmp(tercetos[i]->t1, "BEQ")==0){	
+			escribirSalto(pfASM, "JE", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
-		if(strcmp(tercetos[i]->t1, "BI")==0){			
+		if(strcmp(tercetos[i]->t1, "BI")==0){	
+			escribirSalto(pfASM, "JMP", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
 		/********************** fin saltos ***************************************************/
 		
 		/********************** etiquetas ***************************************************/
 		//TODO: agregar etiquetas en los ciclos y saltos por condicion (then, else, endif, while, endwhile, for...)
-
+		//#ETIQUETA
+		if(strcmp(tercetos[i]->t1, "#ETIQUETA")==0){
+			fprintf(pfASM, tercetos[i]->t2);
+			procesado=1;
+		}
 		/********************** fin etiquetas ***************************************************/
 
 		/********************** operaciones ***************************************************/

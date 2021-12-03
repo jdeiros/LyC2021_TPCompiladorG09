@@ -3,4 +3,4 @@
 2 (CMP, [0], [1])
 3 (BNE, [5], )
 4 (DISPLAY, "estoy", )
-5 (FinIF_5, , )
+5 (#ETIQUETA, FinIF_5, )

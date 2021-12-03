@@ -815,3 +815,36 @@ void resolver_get(FILE* arch,int ind){
 		fprintf(arch, "\tGetFloat  %s\n", op1);
 	}
 }
+
+void escribirSalto(FILE* arch, char* salto, int tercetoDestino){
+    fprintf(arch, "%s ", salto);
+	
+	fprintf(arch, "%s ", tercetos[tercetoDestino]->t2);	
+
+	/*
+    switch( lista_terceto[tercetoDestino - OFFSET].operador ){
+    case THEN:
+        fprintf(arch, "then");
+        break;
+    case ELSE:
+        fprintf(arch, "else");
+        break;
+    case ENDIF:
+        fprintf(arch, "endif");
+        break;
+    case WHILE:
+        fprintf(arch, "while");
+        break;
+    case ENDWHILE:
+        fprintf(arch, "endwhile");
+		break;
+	case INLIST_TRUE:
+        fprintf(arch, "inlistTrue");
+		break;
+	case INLIST_CMP:
+        fprintf(arch, "inlistCMP");
+    }
+
+    fprintf(arch, "%d\n", tercetoDestino);
+	*/
+}

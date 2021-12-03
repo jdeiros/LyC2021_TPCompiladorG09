@@ -47,9 +47,9 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
-	DisplayInteger  a
+JNE FinIF_5 	DisplayInteger  a
 	newline
-
+FinIF_5
 TERMINAR: ;Fin de ejecución.
 	mov ax, 4C00h ; termina la ejecución.
 	int 21h; syscall
