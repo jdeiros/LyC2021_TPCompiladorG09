@@ -82,6 +82,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JAE  
 	DisplayInteger  5
 	newline
 	fild 5
@@ -94,6 +95,7 @@ START:
 	fxch
 	fadd
 	fistp @aux2
+JMP @iterfor 
 	fild 120
 	fistp 5
 	fild 100
@@ -109,6 +111,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JBE @aux 
 	fild 5
 	fistp 5
 	fild 100
@@ -120,6 +123,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JBE @max 
 	fild 5
 	fistp 5
 	fld 5
@@ -129,9 +133,10 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JNE IF_35 
 	DisplayInteger  5
 	newline
-	fild 111
+IF_35	fild 111
 	fistp 5
 	fild var1
 	fistp 5
@@ -144,6 +149,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JAE @aux 
 	fild 5
 	fistp 5
 	fild 100
@@ -155,6 +161,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JAE @min 
 	fild 5
 	fistp 5
 	fld 5
@@ -164,15 +171,17 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JNE IF_53 
 	DisplayInteger  5
 	newline
-	fld E
+IF_53	fld E
 	fld B
 	fxch
 	fcomp
 	fstsw ax
 	ffree st(0)
 	sahf
+JBE  
 	fld A
 	fld D
 	fxch
@@ -180,8 +189,10 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JNE  
 	fld 1.3
 	fstp 5
+JMP  
 	fld A
 	fld 4
 	fxch
@@ -189,6 +200,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JNE  
 	fild 5
 	fistp 5
 	fld B
@@ -198,6 +210,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JA  
 	fld A
 	fld 9
 	fxch
@@ -205,6 +218,7 @@ START:
 	fstsw ax
 	ffree st(0)
 	sahf
+JNE IF_84 
 	fild 3
 	fistp 5
 	mov si, OFFSET "IF anidado"
@@ -212,9 +226,10 @@ START:
 	STRCPY
 	DisplayInteger  5
 	newline
-	mov si, OFFSET "IF exterior"
+IF_84	mov si, OFFSET "IF exterior"
 	mov di, OFFSET 5
 	STRCPY
+JMP  
 	fild 4
 	fistp 5
 	DisplayInteger  5

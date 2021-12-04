@@ -5,6 +5,8 @@ pause
 gcc.exe funciones.c lex.yy.c y.tab.c -o Final.exe
 pause
 Final.exe Prueba.txt
+:: ../TestFiles/prueba_if.txt
+:: Prueba.txt
 del lex.yy.c
 del y.tab.c
 del y.output
