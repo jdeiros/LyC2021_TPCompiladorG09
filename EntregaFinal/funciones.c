@@ -337,8 +337,8 @@ void limpiar_tercetos()
 }
 int terceto_number(char *cadena)
 {
-	int i, longitud = strlen(cadena) - 2, inicio = 1;
-	char subcadena[strlen(cadena)];
+	int i, longitud = strlen(cadena) - 2, inicio = 1, long_subcadena;
+	char *subcadena = (char *)malloc(sizeof(strlen(cadena))); //[strlen(cadena)];
 
 	for (i = 0; i < longitud && inicio + i < strlen(cadena); i++)
 		subcadena[i] = cadena[inicio + i];
@@ -814,4 +814,37 @@ void resolver_get(FILE* arch,int ind){
 	} else if ((tipoDatoOp1==T_FLOAT)||tipoDatoOp1==T_CTE_FLOAT) {
 		fprintf(arch, "\tGetFloat  %s\n", op1);
 	}
+}
+
+void escribirSalto(FILE* arch, char* salto, int tercetoDestino){
+    fprintf(arch, "%s ", salto);
+	printf("debug::::::> terceto destino %d) leyendo terceto -> %s",tercetoDestino, tercetos[tercetoDestino]->t2);
+	fprintf(arch, "%s \n", tercetos[tercetoDestino]->t2);	
+
+	/*
+    switch( lista_terceto[tercetoDestino - OFFSET].operador ){
+    case THEN:
+        fprintf(arch, "then");
+        break;
+    case ELSE:
+        fprintf(arch, "else");
+        break;
+    case ENDIF:
+        fprintf(arch, "endif");
+        break;
+    case WHILE:
+        fprintf(arch, "while");
+        break;
+    case ENDWHILE:
+        fprintf(arch, "endwhile");
+		break;
+	case INLIST_TRUE:
+        fprintf(arch, "inlistTrue");
+		break;
+	case INLIST_CMP:
+        fprintf(arch, "inlistCMP");
+    }
+
+    fprintf(arch, "%d\n", tercetoDestino);
+	*/
 }

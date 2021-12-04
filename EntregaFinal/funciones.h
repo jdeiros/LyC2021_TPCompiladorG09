@@ -126,3 +126,5 @@ void resolver_division(FILE* arch, int terceto, int *countAssemblerAux);
 
 void resolver_display(FILE* arch,int terceto);
 void resolver_get(FILE* arch,int terceto);
+
+void escribirSalto(FILE* arch, char* salto, int tercetoDestino);
