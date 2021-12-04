@@ -818,8 +818,8 @@ void resolver_get(FILE* arch,int ind){
 
 void escribirSalto(FILE* arch, char* salto, int tercetoDestino){
     fprintf(arch, "%s ", salto);
-	
-	fprintf(arch, "%s ", tercetos[tercetoDestino]->t2);	
+	printf("debug::::::> terceto destino %d) leyendo terceto -> %s",tercetoDestino, tercetos[tercetoDestino]->t2);
+	fprintf(arch, "%s \n", tercetos[tercetoDestino]->t2);	
 
 	/*
     switch( lista_terceto[tercetoDestino - OFFSET].operador ){

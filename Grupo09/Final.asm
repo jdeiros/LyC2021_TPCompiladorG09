@@ -29,10 +29,34 @@ INCLUDE number.asm		 ;incluye el asm para impresion de numeros
 	@aux13                            	dd	?
 	@aux14                            	dd	?
 	@aux15                            	dd	?
-	a                               	dd	?
-	b                               	dd	?
-	c                               	dd	?
-	_estoy                          	db	"estoy" ,'$',7          dup (?)
+	A                               	dd	?
+	B                               	dd	?
+	C                               	dd	?
+	D                               	dd	?
+	E                               	dd	?
+	var1                            	dd	?
+	s3                              	dd	?
+	_5                              	dd	5
+	_10p3                           	dd	10.3
+	_hola                           	db	"hola" ,'$',6          dup (?)
+	_FOR                            	db	"FOR" ,'$',5          dup (?)
+	_120                            	dd	120
+	_100                            	dd	100
+	_111                            	dd	111
+	_EQUMAX                         	db	"EQUMAX" ,'$',8          dup (?)
+	_EQUMIN                         	db	"EQUMIN" ,'$',8          dup (?)
+	_1p3                            	dd	1.3
+	_4                              	dd	4
+	_8p3                            	dd	8.3
+	_9                              	dd	9
+	_3                              	dd	3
+	_IF_anidado                     	db	"IF anidado" ,'$',12         dup (?)
+	_condicion_compuesta            	db	"condicion compuesta" ,'$',21         dup (?)
+	_IF_exterior                    	db	"IF exterior" ,'$',13         dup (?)
+	_regla_de_IF_con_ELSE           	db	"regla de IF con ELSE" ,'$',22         dup (?)
+	_HOLA                           	db	"HOLA" ,'$',6          dup (?)
+	_HOLA_TODO_BIEN                 	db	"HOLA TODO BIEN" ,'$',16         dup (?)
+	_Mostrar_por_pantalla           	db	"Mostrar por pantalla" ,'$',22         dup (?)
 
 .CODE
 START:
@@ -40,16 +64,188 @@ START:
 	MOV DS,AX
 	MOV es,ax
 
-	fld a
-	fld b
+	fild 5
+	fistp 5
+	fld 10.3
+	fstp 5
+	mov si, OFFSET "hola"
+	mov di, OFFSET 5
+	STRCPY
+	fld B
+	fstp 5
+	fild D
+	fistp 5
+	fld 5
+	fld 5
 	fxch
 	fcomp
 	fstsw ax
 	ffree st(0)
 	sahf
-JNE FinIF_5 	DisplayInteger  a
+JAE  
+	DisplayInteger  5
 	newline
-FinIF_5
+	fild 5
+	fild 5
+	fxch
+	fadd
+	fistp @aux1
+	fild 5
+	fild 5
+	fxch
+	fadd
+	fistp @aux2
+JMP @iterfor 
+	fild 120
+	fistp 5
+	fild 100
+	fistp 5
+	fild var1
+	fistp 5
+	fild 111
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JBE @aux 
+	fild 5
+	fistp 5
+	fild 100
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JBE @max 
+	fild 5
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JNE IF_35 
+	DisplayInteger  5
+	newline
+IF_35	fild 111
+	fistp 5
+	fild var1
+	fistp 5
+	fild 111
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JAE @aux 
+	fild 5
+	fistp 5
+	fild 100
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JAE @min 
+	fild 5
+	fistp 5
+	fld 5
+	fld 5
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JNE IF_53 
+	DisplayInteger  5
+	newline
+IF_53	fld E
+	fld B
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JBE  
+	fld A
+	fld D
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JNE  
+	fld 1.3
+	fstp 5
+JMP  
+	fld A
+	fld 4
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JNE  
+	fild 5
+	fistp 5
+	fld B
+	fld 8.3
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JA  
+	fld A
+	fld 9
+	fxch
+	fcomp
+	fstsw ax
+	ffree st(0)
+	sahf
+JNE IF_84 
+	fild 3
+	fistp 5
+	mov si, OFFSET "IF anidado"
+	mov di, OFFSET 5
+	STRCPY
+	DisplayInteger  5
+	newline
+IF_84	mov si, OFFSET "IF exterior"
+	mov di, OFFSET 5
+	STRCPY
+JMP  
+	fild 4
+	fistp 5
+	DisplayInteger  5
+	newline
+	mov si, OFFSET "HOLA"
+	mov di, OFFSET 5
+	STRCPY
+	mov si, OFFSET "HOLA TODO BIEN"
+	mov di, OFFSET 5
+	STRCPY
+	DisplayInteger  5
+	newline
+	GetInteger  5
+	DisplayInteger  5
+	newline
+
 TERMINAR: ;Fin de ejecución.
 	mov ax, 4C00h ; termina la ejecución.
 	int 21h; syscall

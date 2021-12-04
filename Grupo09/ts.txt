@@ -1,6 +1,30 @@
  Nombre                          | Tipo          | Valor                          | Longitud |
 ---------------------------------|---------------|--------------------------------|----------|
-a                                |INT            |                                |0         |
-b                                |INT            |                                |0         |
-c                                |INT            |                                |0         |
-_estoy                           |CTE_STRING     |"estoy"                         |7         |
+A                                |INT            |                                |0         |
+B                                |FLOAT          |                                |0         |
+C                                |STRING         |                                |0         |
+D                                |INT            |                                |0         |
+E                                |FLOAT          |                                |0         |
+var1                             |INT            |                                |0         |
+s3                               |STRING         |                                |0         |
+_5                               |CTE_INT        |5                               |0         |
+_10p3                            |CTE_FLOAT      |10.3                            |0         |
+_hola                            |CTE_STRING     |"hola"                          |6         |
+_FOR                             |CTE_STRING     |"FOR"                           |5         |
+_120                             |CTE_INT        |120                             |0         |
+_100                             |CTE_INT        |100                             |0         |
+_111                             |CTE_INT        |111                             |0         |
+_EQUMAX                          |CTE_STRING     |"EQUMAX"                        |8         |
+_EQUMIN                          |CTE_STRING     |"EQUMIN"                        |8         |
+_1p3                             |CTE_FLOAT      |1.3                             |0         |
+_4                               |CTE_INT        |4                               |0         |
+_8p3                             |CTE_FLOAT      |8.3                             |0         |
+_9                               |CTE_INT        |9                               |0         |
+_3                               |CTE_INT        |3                               |0         |
+_IF_anidado                      |CTE_STRING     |"IF anidado"                    |12        |
+_condicion_compuesta             |CTE_STRING     |"condicion compuesta"           |21        |
+_IF_exterior                     |CTE_STRING     |"IF exterior"                   |13        |
+_regla_de_IF_con_ELSE            |CTE_STRING     |"regla de IF con ELSE"          |22        |
+_HOLA                            |CTE_STRING     |"HOLA"                          |6         |
+_HOLA_TODO_BIEN                  |CTE_STRING     |"HOLA TODO BIEN"                |16        |
+_Mostrar_por_pantalla            |CTE_STRING     |"Mostrar por pantalla"          |22        |

@@ -84,6 +84,12 @@
 	#define STR_VALUE 1024
 
 	// char etiqueta[COTA_STR];
+	// Variables para el funcionamiento de operaciones if, while
+	char* pila_etiquetas[100];
+	int tope_pila_etiquetas = 0;
+	int contador_operaciones = 0;
+	int nro_etiqueta;
+	char sEtiqueta[30];
 %}
 
 %union{
@@ -231,7 +237,7 @@ operacion_if:
 			   }
 
 			   //int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
-			   sprintf(etiq, "FinIF_%d", cant_tercetos);
+			   sprintf(etiq, "IF_%d", cant_tercetos);
 			   fin_if = crear_terceto("#ETIQUETA",etiq,NULL);
 
 			   /* Modifico los tercetos temporales de las condiciones */
@@ -291,33 +297,33 @@ operacion_if:
 			   } 
 			   
 			   //int fin_if = cant_tercetos; /* Terceto temporal para fin del if */
-			   sprintf(etiq, "FinIF_%d", cant_tercetos);
-			   fin_if = crear_terceto(etiq,NULL,NULL);
+			   //sprintf(etiq, "IF_%d", cant_tercetos);
+			   //fin_if = crear_terceto("#ETIQUETA",etiq,NULL);
 
 			   /* Modifico los tercetos temporales de las condiciones */
 			   for (i=0; i<cant_condiciones; i++){
-				   iCmp = sacar_pila (&comparacion);
-				   terceto_condicion = sacar_pila (&pila);
-				   
-				   sprintf(condicion, "[%d]", terceto_condicion-1);
-				   printf("condicion: %s\n",condicion);
-				   
-				   sprintf(destino, "[%d]", fin_if+1);
-				   printf("destino: %s\n", destino);
-				   
-				   /* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
-				   if (tipo_condicion==COND_OR && i==1){
-					   sprintf(destino, "[%d]", segunda_condicion+1);
-					   printf("destino segunda condicion: %s\n", destino);
+					iCmp = sacar_pila (&comparacion);
+					terceto_condicion = sacar_pila (&pila);
+					
+					sprintf(condicion, "[%d]", terceto_condicion-1);
+					printf("condicion: %s\n",condicion);
+					
+					sprintf(destino, "[%d]", cant_tercetos+1);
+					printf("destino: %s\n", destino);
+									
+					/* Si es OR y la primera condicion se cumple debe saltar al inicio del then */
+					if (tipo_condicion==COND_OR && i==1){
+						sprintf(destino, "[%d]", segunda_condicion+1);
+						printf("destino segunda condicion: %s\n", destino);
 
-					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
-				   } else if (tipo_condicion==COND_NOT){
-					   /* Si es NOT, produce el salto cuando se cumple la condicion */
-					   tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
-				   } else {
-					   segunda_condicion = terceto_condicion;
-					   tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], destino, NULL);
-				   }
+						tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
+					} else if (tipo_condicion==COND_NOT){
+						/* Si es NOT, produce el salto cuando se cumple la condicion */
+						tercetos[terceto_condicion] = _crear_terceto(salto_contrario[iCmp], destino, NULL);
+					} else {
+						segunda_condicion = terceto_condicion;
+						tercetos[terceto_condicion] = _crear_terceto(salto[iCmp], destino, NULL);
+					}
 			   }
 			   //insertar_pila(&pila, crear_terceto("###", NULL, NULL)); /* guardo fin_then para el else */
                $<stringValue>$ =string_from_cte(atoi( $<stringValue>7)+1);
@@ -330,9 +336,13 @@ operacion_if:
 		   CAR_LA sentencias CAR_LC {
 				// creo el salto al ultimo terceto del else
 				int fin_then = sacar_pila (&pila);
-				char destino[7];
+				char destino[7],etiq[10];
 				sprintf(destino, "[%d]", cant_tercetos);
 				tercetos[fin_then] = _crear_terceto("BI", destino, NULL);
+				
+				sprintf(etiq, "IF_%d", cant_tercetos);
+			   	tercetos[cant_tercetos] = _crear_terceto("#ETIQUETA",etiq,NULL);
+				
 				itoa(fin_then, $<stringValue>$, 10);
 				$<stringValue>$ = string_from_cte(atoi($<stringValue>13)+1);
            }
@@ -352,7 +362,7 @@ iteracion_while:
 		int tipo_condicion = sacar_pila (&pila_condicion);
 		if ( tipo_condicion==COND_AND || tipo_condicion==COND_OR ){
 			cant_condiciones = 2; /* Solo se permite comparacion entre dos condiciones simple */
-		} 
+		}
 		int fin_while = crear_terceto("BI", NULL, NULL); /* Terceto temporal para fin del while */
 		/* Modifico los tercetos temporales de las condiciones */
 		for (i=0; i<cant_condiciones; i++){
@@ -723,8 +733,8 @@ void generarCodigo() {
 	fprintf(pfASM, "\tMOV es,ax\n\n");
 			
 	for(i=0; i < cant_tercetos; i++){
-		// printf("%d) leyendo terceto -> ",i);
-		// printf("(t1, t2, t3) = (%s, %s, %s)\n", tercetos[i]->t1,tercetos[i]->t2,tercetos[i]->t3);
+		printf("debug::::::> terceto %d) leyendo terceto -> ",i);
+		printf("debug::::::> (t1, t2, t3) = (%s, %s, %s)\n", tercetos[i]->t1,tercetos[i]->t2,tercetos[i]->t3);
 		
 		/********************** asignacion y comparacion ***************************************************/
 		if(strcmp(tercetos[i]->t1, ":=")==0){
@@ -762,7 +772,8 @@ void generarCodigo() {
 			escribirSalto(pfASM, "JE", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
-		if(strcmp(tercetos[i]->t1, "BI")==0){	
+		if(strcmp(tercetos[i]->t1, "BI")==0){
+			printf("debug .:::::::::::::::::::> bi terceto_number(tercetos[i]->t2): %d\n",terceto_number(tercetos[i]->t2));
 			escribirSalto(pfASM, "JMP", terceto_number(tercetos[i]->t2));
 			procesado=1;
 		}
@@ -771,7 +782,9 @@ void generarCodigo() {
 		/********************** etiquetas ***************************************************/
 		//TODO: agregar etiquetas en los ciclos y saltos por condicion (then, else, endif, while, endwhile, for...)
 		//#ETIQUETA
+		printf("debug ::::::> %s\n", tercetos[i]->t2);
 		if(strcmp(tercetos[i]->t1, "#ETIQUETA")==0){
+			printf("debug ::::::> antes de escribir: %s\n", tercetos[i]->t2);
 			fprintf(pfASM, tercetos[i]->t2);
 			procesado=1;
 		}
@@ -806,10 +819,11 @@ void generarCodigo() {
 			procesado=1;
 		}
 		/********************** fin I/O ***************************************************/
-		
-		procesado==1 ? procesado=0 : printf("Terceto con valor: [%d] (%s, ,): %s\n",i, tercetos[i]->t1,get_type(tercetos[i]->tipo));
+		printf("debug ::::::> salgo? : cant tercetos: %d, contador i: %d\n", cant_tercetos,i);
+		printf("debug ::::::> llego: %s valor\n", tercetos[i]->t1);
+		procesado==1 ? procesado=0 : printf("Terceto con valor: [%d] (%s, ,): %s\n",i, tercetos[i]->t1, get_type(tercetos[i]->tipo));
 	}
-
+	printf("debug ::::::> salgo? : cant tercetos: %d\n", cant_tercetos);
 	//Fin de ejecución
     fprintf(pfASM, "\nTERMINAR: ;Fin de ejecución.\n\tmov ax, 4C00h ; termina la ejecución.\n\tint 21h; syscall\n\nEND START;final del archivo."); 
 }
